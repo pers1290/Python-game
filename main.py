@@ -10,6 +10,8 @@ TILE = 100
 FPS_POS = (WIDTH - 65, 5)
 SENSETIV = 0.004
 
+
+#tinkoff.ru/baf/5nUwApigoH
 # тукстуры
 TEXTURE_WIDTH = 1080
 TEXTURE_HEIGHT = 1080
