@@ -3,6 +3,7 @@ import math
 import copy
 
 # игровые настройки
+print(0)
 WIDTH = 1200
 HEIGHT = 800
 FPS = 60
@@ -10,7 +11,7 @@ TILE = 100
 FPS_POS = (WIDTH - 65, 5)
 SENSETIV = 0.004
 
-# тукстуры
+# текстуры
 TEXTURE_WIDTH = 1080
 TEXTURE_HEIGHT = 1080
 TEXTURE_SCALE = TEXTURE_HEIGHT // TILE
