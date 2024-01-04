@@ -3,7 +3,6 @@ import math
 import copy
 
 # игровые настройки
-print(0)
 WIDTH = 1200
 HEIGHT = 800
 FPS = 60
