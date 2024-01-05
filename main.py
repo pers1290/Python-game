@@ -23,6 +23,7 @@ MAP_TILE = TILE // MAP_SCALE // 2
 MAP_POS = (20, HEIGHT - HEIGHT // MINIMAP - 40)
 
 FOV = math.pi / 3
+HALF_FOV = FOV / 2
 NUM_RAYS = 300
 MAX_DEPTH = 800
 DELTA_ANGLE = FOV / NUM_RAYS
@@ -197,7 +198,7 @@ class Sprites:
 
 
 class SpriteObject:
-    def __init__(self, object, static, pas, shift, scale):
+    def __init__(self, object, static, pos, shift, scale):
         self.object = object
         self.static = static
         self.pas = self.x, self.y = pos[0] * TILE, pos[1] * TILE
@@ -329,6 +330,8 @@ def main():
                 exit()
         player.movement()
         sc.fill((0, 0, 0))
+
+        # print(player.pos()[0] / TILE, player.pos()[1] / TILE)
 
         drawing.background()
         drawing.ray_casting((int(player.x), int(player.y)), player.angle, sc)
