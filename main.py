@@ -34,6 +34,10 @@ SCALE = WIDTH // NUM_RAYS
 player_pos = (1350, 1450)
 player_angle = 300
 
+# спрайты
+DOUBLE_PI = 2 * math.pi
+CENTER_RAY = NUM_RAYS // 2 - 1
+
 
 def player_speed():
     keys = pygame.key.get_pressed()
@@ -179,6 +183,40 @@ class Player:
             self.angle -= 0.01
         if keys[pygame.K_RIGHT]:
             self.angle += 0.01
+
+
+class Sprites:
+    def __init__(self):
+        self.sprite_types = {
+            'lol': pygame.image.load('data/lol.png').convert_alpha()
+        }
+        self.list_of_objects = [
+            SpriteObject(self.sprite_types['lol'], True, (7.1, 2.1), 1.8, 0.4),
+            SpriteObject(self.sprite_types['lol'], True, (7.1, 2.1), 1.8, 0.4)
+        ]
+
+
+class SpriteObject:
+    def __init__(self, object, static, pas, shift, scale):
+        self.object = object
+        self.static = static
+        self.pas = self.x, self.y = pos[0] * TILE, pos[1] * TILE
+        self.shift = shift
+        self.scale = scale
+
+    def object_locate(self, player, walls):
+        dx, dy = self.x - player.x, self.y - player.y
+        distance_to_sprite = math.sqrt(dx ** 2 + dy ** 2)
+
+        theta = math.atan2(dy, dx)
+        gamma = theta - player.angle
+        if dx > 0 and 180 <= math.degrees(player.angle) <= 360 or dx < 0 and dy < 0:
+            gamma += DOUBLE_PI
+
+        delta_rays = int(gamma / DELTA_ANGLE)
+        current_ray = CENTER_RAY + delta_rays
+        distance_to_sprite *= math.cos(HALF_FOV - current_ray * DELTA_ANGLE)
+
 
 
 class Drawing:
