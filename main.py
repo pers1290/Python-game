@@ -43,9 +43,9 @@ CENTER_RAY = NUM_RAYS // 2 - 1
 def player_speed():
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LSHIFT]:
-        return 3
+        return 3.1
     else:
-        return 1.5
+        return 1.6
 
 
 # карта
@@ -181,9 +181,9 @@ class Player:
             dy = player_speed() * cos_a
             self.st(dx, dy)
         if keys[pygame.K_LEFT]:
-            self.angle -= 0.01
+            self.angle -= 0.015
         if keys[pygame.K_RIGHT]:
-            self.angle += 0.01
+            self.angle += 0.015
 
 
 class Sprites:
