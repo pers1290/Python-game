@@ -395,10 +395,10 @@ def main():
         player.movement()
         sc.fill((0, 0, 0))
 
-        ##print(player.pos()[0] / TILE, player.pos()[1] / TILE)
+        # print(player.pos()[0] / TILE, player.pos()[1] / TILE)
 
         drawing.background()
-        ##drawing.ray_casting((int(player.x), int(player.y)), player.angle, sc)
+        # drawing.ray_casting((int(player.x), int(player.y)), player.angle, sc)
         walls = drawing.ray_casting((int(player.x), int(player.y)), player.angle)
         drawing.world(walls + [obj.object_locate(player, walls) for obj in sprites.list_of_objects])
         drawing.fps(clock)
