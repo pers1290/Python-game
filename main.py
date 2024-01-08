@@ -340,11 +340,9 @@ def main():
                 if event.key == pygame.K_DOWN:
                     vol -= 0.1
                     pygame.mixer.music.set_volume(vol)
-                    print(pygame.mixer.music.get_volume())
                 if event.key == pygame.K_UP:
                     vol += 0.1
                     pygame.mixer.music.set_volume(vol)
-                    print(pygame.mixer.music.get_volume())
 
         sc.fill((0, 0, 0))
         player.movement()
