@@ -268,7 +268,7 @@ class Drawing:
             proj_height = min(int(PROJ_COEFF / depth), 2 * HEIGHT)
             wall_column = self.texture[texture].subsurface(offset * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
             wall_column = pygame.transform.scale(wall_column, (SCALE, proj_height))
-            ##sc.blit(wall_column, (ray * SCALE, HEIGHT // 2 - proj_height // 2))
+            # sc.blit(wall_column, (ray * SCALE, HEIGHT // 2 - proj_height // 2))
             wall_pos = (ray * SCALE, HEIGHT // 2 - proj_height // 2)
             val.append((depth, wall_column, wall_pos))
             cur_angle += DELTA_ANGLE
@@ -281,9 +281,9 @@ class Drawing:
 
     def mini_map(self, player):
         global a1
-        ##a1 = 0
+        # a1 = 0
         g = 1.15
-        ##a = [(8, 8), (48, 16), (24, 15 * 8), (40, 13 * 8), (88, 16 * 8), (13 * 8, 8), (160, 17 * 8), (160, 88), (23 * 8, 24), (29 * 8, 15 * 8), (240, 48)]
+        # a = [(8, 8), (48, 16), (24, 15 * 8), (40, 13 * 8), (88, 16 * 8), (13 * 8, 8), (160, 17 * 8), (160, 88), (23 * 8, 24), (29 * 8, 15 * 8), (240, 48)]
         money = pygame.image.load('data/bit.png').convert_alpha()
         new_money = pygame.transform.scale(money, (8, 8))
         self.sc_map.fill((100, 100, 100))
