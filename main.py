@@ -157,7 +157,6 @@ class Player:
             pygame.mouse.set_pos((WIDTH // 2, HEIGHT // 2))
             self.angle += diff * SENSETIV
 
-
     def keys(self):
         sin_a = math.sin(self.angle)
         cos_a = math.cos(self.angle)
@@ -217,7 +216,6 @@ class SpriteObject:
         delta_rays = int(gamma / DELTA_ANGLE)
         current_ray = CENTER_RAY + delta_rays
         distance_to_sprite *= math.cos(HALF_FOV - current_ray * DELTA_ANGLE)
-
 
 
 class Drawing:
@@ -329,25 +327,22 @@ def main():
     vol = 0.2
     pygame.mixer.music.set_volume(vol)
 
-
-
     while True:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
-            # elif event.type == pygame.KEYDOWN:
-            #     vol -= 0.1
-            #     pygame.mixer.music.set_volume(vol)
-            #     print(1, pygame.mixer.music.get_volume())
-            # elif event.type == pygame.KEYUP:
-            #     vol += 0.1
-            #     pygame.mixer.music.set_volume(vol)
-            #     print(2, pygame.mixer.music.get_volume())
+            elif event.type == pygame.KEYDOWN:
+                vol -= 0.1
+                pygame.mixer.music.set_volume(vol)
+                print(1, pygame.mixer.music.get_volume())
+            elif event.type == pygame.KEYUP:
+                vol += 0.1
+                pygame.mixer.music.set_volume(vol)
+                print(2, pygame.mixer.music.get_volume())
 
         sc.fill((0, 0, 0))
         player.movement()
-
 
         # print(player.pos()[0] / TILE, player.pos()[1] / TILE)
 
