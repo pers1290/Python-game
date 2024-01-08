@@ -348,6 +348,7 @@ class SpriteObject:
         distance_to_sprite *= math.cos(HALF_FOV - current_ray * DELTA_ANGLE)
 
         fake_ray = current_ray + FAKE_RAYS
+        # print(fake_ray <= NUM_RAYS - 1 + 2 * FAKE_RAYS and distance_to_sprite < fake_walls[fake_ray][0])
         if 0 <= fake_ray <= NUM_RAYS - 1 + 2 * FAKE_RAYS and distance_to_sprite < fake_walls[fake_ray][0]:
             print('uiooyi')
             proj_height = min(int(PROJ_COEFF / distance_to_sprite * self.scale), 2 * HEIGHT)
@@ -370,11 +371,27 @@ def main():
     player = Player()
     drawing = Drawing(sc, sc_map)
     pygame.mouse.set_visible(False)
+    pygame.mixer.init()
+    pygame.mixer.music.load("data/music2.mp3")
+    pygame.mixer.music.play(-1, 0.0)
+    vol = 0.2
+    pygame.mixer.music.set_volume(vol)
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
+            if vol < 0:
+                vol = 0.0
+            if vol > 1:
+                vol = 1.0
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_DOWN:
+                    vol -= 0.1
+                    pygame.mixer.music.set_volume(vol)
+                if event.key == pygame.K_UP:
+                    vol += 0.1
+                    pygame.mixer.music.set_volume(vol)
         player.movement()
         sc.fill((0, 0, 0))
 
