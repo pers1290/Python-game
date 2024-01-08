@@ -322,7 +322,7 @@ def main():
     drawing = Drawing(sc, sc_map)
     pygame.mouse.set_visible(False)
     pygame.mixer.init()
-    pygame.mixer.music.load("data/music.mp3")
+    pygame.mixer.music.load("data/music2.mp3")
     pygame.mixer.music.play(-1, 0.0)
     vol = 0.2
     pygame.mixer.music.set_volume(vol)
