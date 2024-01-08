@@ -332,14 +332,19 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
+            if vol < 0:
+                vol = 0.0
+            if vol > 1:
+                vol = 1.0
             elif event.type == pygame.KEYDOWN:
-                vol -= 0.1
-                pygame.mixer.music.set_volume(vol)
-                print(1, pygame.mixer.music.get_volume())
-            elif event.type == pygame.KEYUP:
-                vol += 0.1
-                pygame.mixer.music.set_volume(vol)
-                print(2, pygame.mixer.music.get_volume())
+                if event.key == pygame.K_DOWN:
+                    vol -= 0.1
+                    pygame.mixer.music.set_volume(vol)
+                    print(pygame.mixer.music.get_volume())
+                if event.key == pygame.K_UP:
+                    vol += 0.1
+                    pygame.mixer.music.set_volume(vol)
+                    print(pygame.mixer.music.get_volume())
 
         sc.fill((0, 0, 0))
         player.movement()
