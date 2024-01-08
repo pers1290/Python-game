@@ -5,6 +5,8 @@ import copy
 # игровые настройки
 WIDTH = 1200
 HEIGHT = 800
+HALF_WIDTH = WIDTH // 2
+HALF_HEIGHT = HEIGHT // 2
 FPS = 60
 TILE = 100
 FPS_POS = (WIDTH - 65, 5)
@@ -38,14 +40,19 @@ player_angle = 300
 # спрайты
 DOUBLE_PI = 2 * math.pi
 CENTER_RAY = NUM_RAYS // 2 - 1
+FAKE_RAYS = 100
+
+a = [(8, 8), (48, 16), (24, 15 * 8), (40, 13 * 8), (88, 16 * 8), (13 * 8, 8), (160, 17 * 8), (160, 88), (23 * 8, 24),
+     (29 * 8, 15 * 8), (240, 48)]
+a1 = 0
 
 
 def player_speed():
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LSHIFT]:
-        return 3.1
+        return 5.1
     else:
-        return 1.6
+        return 3.1
 
 
 # карта
@@ -53,15 +60,15 @@ _ = False
 text_map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1],
     [1, _, _, _, 1, 1, 1, 1, _, _, 1, _, 1, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 1],
-    [1, _, 2, _, _, 3, _, _, _, _, 6, _, 1, _, 1, 2, 1, 1, 1, _, 5, 3, 1, 1, 1, _, 1, 1, 1, 1, 1, _, 1],
-    [1, _, 7, _, _, 1, _, 6, 6, _, 1, _, 1, _, 1, _, _, _, _, 1, 1, _, _, _, 1, _, _, _, _, _, 1, _, 1],
-    [1, _, 1, _, _, 1, _, 6, 6, _, _, _, 1, _, 1, _, 1, 7, _, _, _, _, 1, _, _, _, _, 5, 6, _, 1, _, 3],
-    [1, _, 1, _, _, 1, _, 6, 6, _, 7, _, 1, _, 1, _, 7, 7, 1, 1, 1, _, 1, _, 1, 1, _, 1, 1, _, 1, _, 6],
-    [1, _, 9, _, _, 1, _, _, _, _, 1, _, 1, _, 1, _, _, _, _, _, _, _, _, _, 1, 7, _, _, 1, _, _, _, 6],
-    [1, _, 1, _, _, 1, 2, 1, 1, 1, 1, _, 1, _, _, _, 1, 1, _, 1, _, 1, 1, 1, 1, _, _, _, 1, _, 1, _, 6],
-    [1, _, 1, _, _, _, _, 1, 7, 7, _, _, 1, 5, 1, 1, 1, 1, _, 1, _, _, 7, _, _, _, _, 1, 1, _, 1, _, 6],
-    [1, _, 1, _, 1, _, _, _, _, _, _, _, _, _, _, _, _, 1, _, 1, 1, _, 7, 1, 1, 1, _, _, _, _, 9, _, 6],
-    [1, _, 1, _, 1, _, 5, _, 9, 1, 1, 1, 1, _, 1, _, _, 1, _, 1, _, _, _, _, _, _, _, _, 1, _, 1, _, 4],
+    [1, _, _, _, _, 3, _, _, _, _, 6, _, 1, _, 1, 2, 1, 1, 1, _, 5, 3, 1, 1, 1, _, 1, 1, 1, 1, 1, _, 1],
+    [1, _, _, _, _, 1, _, 6, 6, _, 1, _, 1, _, 1, _, _, _, _, 1, 1, _, _, _, 1, _, _, _, _, _, 1, _, 1],
+    [1, _, _, _, _, 1, _, 6, 6, _, _, _, 1, _, 1, _, 1, 7, _, _, _, _, 1, _, _, _, _, 5, 6, _, 1, _, 3],
+    [1, _, _, _, _, 1, _, 6, 6, _, 7, _, 1, _, 1, _, 7, 7, 1, 1, 1, _, 1, _, 1, 1, _, 1, 1, _, 1, _, 6],
+    [1, _, _, _, _, 1, _, _, _, _, 1, _, 1, _, 1, _, _, _, _, _, _, _, _, _, 1, 7, _, _, 1, _, _, _, 6],
+    [1, _, _, _, _, 1, 2, 1, 1, 1, 1, _, 1, _, _, _, 1, 1, _, 1, _, 1, 1, 1, 1, _, _, _, 1, _, 1, _, 6],
+    [1, _, _, _, _, _, _, 1, 7, 7, _, _, 1, 5, 1, 1, 1, 1, _, 1, _, _, 7, _, _, _, _, 1, 1, _, 1, _, 6],
+    [1, _, _, _, 1, _, _, _, _, _, _, _, _, _, _, _, _, 1, _, 1, 1, _, 7, 1, 1, 1, _, _, _, _, 9, _, 6],
+    [1, _, _, _, 1, _, 5, _, 9, 1, 1, 1, 1, _, 1, _, _, 1, _, 1, _, _, _, _, _, _, _, _, 1, _, 1, _, 4],
     [1, _, _, _, 1, _, 5, _, 0, _, _, _, 1, _, 1, 1, _, 1, _, 1, _, 1, _, _, _, 1, 1, 1, 1, 1, 6, _, 1],
     [1, _, 6, _, 5, _, 5, _, 1, _, 1, _, 1, _, 7, 1, _, 6, _, 1, 4, 1, _, 7, _, 1, _, _, _, _, 1, _, 7],
     [1, _, 1, _, 1, _, _, _, 1, _, _, 1, 8, _, 8, 1, _, 7, _, 4, _, 1, 1, 1, 1, 7, _, 6, 6, _, 1, _, 1],
@@ -185,39 +192,6 @@ class Player:
             self.angle += 0.015
 
 
-class Sprites:
-    def __init__(self):
-        self.sprite_types = {
-            'lol': pygame.image.load('data/lol.png').convert_alpha()
-        }
-        self.list_of_objects = [
-            SpriteObject(self.sprite_types['lol'], True, (7.1, 2.1), 1.8, 0.4),
-            SpriteObject(self.sprite_types['lol'], True, (7.1, 2.1), 1.8, 0.4)
-        ]
-
-
-class SpriteObject:
-    def __init__(self, object, static, pos, shift, scale):
-        self.object = object
-        self.static = static
-        self.pas = self.x, self.y = pos[0] * TILE, pos[1] * TILE
-        self.shift = shift
-        self.scale = scale
-
-    def object_locate(self, player, walls):
-        dx, dy = self.x - player.x, self.y - player.y
-        distance_to_sprite = math.sqrt(dx ** 2 + dy ** 2)
-
-        theta = math.atan2(dy, dx)
-        gamma = theta - player.angle
-        if dx > 0 and 180 <= math.degrees(player.angle) <= 360 or dx < 0 and dy < 0:
-            gamma += DOUBLE_PI
-
-        delta_rays = int(gamma / DELTA_ANGLE)
-        current_ray = CENTER_RAY + delta_rays
-        distance_to_sprite *= math.cos(HALF_FOV - current_ray * DELTA_ANGLE)
-
-
 class Drawing:
     def __init__(self, sc, sc_map):
         self.sc = sc
@@ -238,7 +212,14 @@ class Drawing:
         pygame.draw.rect(self.sc, (40, 10, 0), (0, HEIGHT / 2, WIDTH, HEIGHT / 2))
         pygame.draw.rect(self.sc, (20, 20, 20), (0, 0, WIDTH, HEIGHT / 2))
 
-    def ray_casting(self, player_pos, player_angle, sc):
+    def world(self, world_objects):
+        for obj in sorted(world_objects, key=lambda n: n[0], reverse=True):
+            if obj[0]:
+                _, object, object_pos = obj
+                self.sc.blit(object, object_pos)
+
+    def ray_casting(self, player_pos, player_angle):
+        val = []
         texture_v = 1
         texture_h = 1
         cur_angle = player_angle - FOV / 2
@@ -287,8 +268,11 @@ class Drawing:
             proj_height = min(int(PROJ_COEFF / depth), 2 * HEIGHT)
             wall_column = self.texture[texture].subsurface(offset * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
             wall_column = pygame.transform.scale(wall_column, (SCALE, proj_height))
-            sc.blit(wall_column, (ray * SCALE, HEIGHT // 2 - proj_height // 2))
+            ##sc.blit(wall_column, (ray * SCALE, HEIGHT // 2 - proj_height // 2))
+            wall_pos = (ray * SCALE, HEIGHT // 2 - proj_height // 2)
+            val.append((depth, wall_column, wall_pos))
             cur_angle += DELTA_ANGLE
+        return val
 
     def fps(self, clock):
         d_fps = str(int(clock.get_fps()))
@@ -296,21 +280,85 @@ class Drawing:
         self.sc.blit(rend, FPS_POS)
 
     def mini_map(self, player):
+        global a1
+        ##a1 = 0
+        g = 1.15
+        ##a = [(8, 8), (48, 16), (24, 15 * 8), (40, 13 * 8), (88, 16 * 8), (13 * 8, 8), (160, 17 * 8), (160, 88), (23 * 8, 24), (29 * 8, 15 * 8), (240, 48)]
+        money = pygame.image.load('data/bit.png').convert_alpha()
+        new_money = pygame.transform.scale(money, (8, 8))
         self.sc_map.fill((100, 100, 100))
         map_x, map_y = player.x // MAP_SCALE // 2, player.y // MAP_SCALE // 2
         pygame.draw.circle(self.sc_map, (0, 150, 0), (int(map_x * 1.1), int(map_y * 1.1)), 5)
         for x, y in mini_map:
             pygame.draw.rect(self.sc_map, (50, 0, 0), ((x * 1.15), y * 1.15, MAP_TILE, MAP_TILE))
+        s = (int(map_x) - 5, int(map_y) - 5)
+        if s in a:
+            d = a.index(s)
+            del a[d]
+            a1 += 1
+        for i in a:
+            self.sc_map.blit(new_money, (i[0] * g, i[1] * g))
         self.sc.blit(self.sc_map, MAP_POS)
-        a = 0
-        a1 = 5
+        a2 = 11
         l = 1
         lvl = f'lvl: {l}'
-        text = f'Собрано: {a} /{a1}'
+        text = f'Собрано: {a1} /{a2}'
         rend1 = self.font.render(lvl, 0, (50, 0, 0))
         rend = self.font.render(text, 0, (50, 0, 0))
         self.sc.blit(rend, (30, HEIGHT - 65))
         self.sc.blit(rend1, (250, HEIGHT - 65))
+
+
+class Sprites:
+    def __init__(self):
+        self.sprite_types = {
+            'money': pygame.image.load('data/bit.png').convert_alpha()
+        }
+        self.list_of_objects = [
+            SpriteObject(self.sprite_types['money'], True, (7.1, 2.1), 1.8, 0.4),
+            SpriteObject(self.sprite_types['money'], True, (13.5, 14.5), 1.8, 0.4),
+            SpriteObject(self.sprite_types['money'], True, (13.52, 9.60), 1.8, 0.4),
+            SpriteObject(self.sprite_types['money'], True, (5.54, 8.90), 1.8, 0.4)
+        ]
+
+
+class SpriteObject:
+    def __init__(self, object, static, pos, shift, scale):
+        self.object = object
+        self.static = static
+        self.pas = self.x, self.y = pos[0] * TILE, pos[1] * TILE
+        self.shift = shift
+        self.scale = scale
+
+    def object_locate(self, player, walls):
+        fake_walls0 = [walls[0] for i in range(FAKE_RAYS)]
+        fake_walls1 = [walls[-1] for i in range(FAKE_RAYS)]
+        fake_walls = fake_walls0 + walls + fake_walls1
+
+        dx, dy = self.x - player.x, self.y - player.y
+        distance_to_sprite = math.sqrt(dx ** 2 + dy ** 2)
+
+        theta = math.atan2(dy, dx)
+        gamma = theta - player.angle
+        if dx > 0 and 180 <= math.degrees(player.angle) <= 360 or dx < 0 and dy < 0:
+            gamma += DOUBLE_PI
+
+        delta_rays = int(gamma / DELTA_ANGLE)
+        current_ray = CENTER_RAY + delta_rays
+        distance_to_sprite *= math.cos(HALF_FOV - current_ray * DELTA_ANGLE)
+
+        fake_ray = current_ray + FAKE_RAYS
+        if 0 <= fake_ray <= NUM_RAYS - 1 + 2 * FAKE_RAYS and distance_to_sprite < fake_walls[fake_ray][0]:
+            print('uiooyi')
+            proj_height = min(int(PROJ_COEFF / distance_to_sprite * self.scale), 2 * HEIGHT)
+            half_proj_height = proj_height // 2
+            shift = half_proj_height * self.shift
+
+            sprite_pos = (current_ray * SCALE - half_proj_height, HALF_HEIGHT - half_proj_height + shift)
+            sprite = pygame.transform.scale(self.object, (proj_height, proj_height))
+            return (distance_to_sprite, sprite, sprite_pos)
+        else:
+            return (False,)
 
 
 def main():
@@ -318,39 +366,24 @@ def main():
     sc = pygame.display.set_mode((WIDTH, HEIGHT))
     sc_map = pygame.Surface(MINIMAP_RES)
     clock = pygame.time.Clock()
+    sprites = Sprites()
     player = Player()
     drawing = Drawing(sc, sc_map)
     pygame.mouse.set_visible(False)
-    pygame.mixer.init()
-    pygame.mixer.music.load("data/music2.mp3")
-    pygame.mixer.music.play(-1, 0.0)
-    vol = 0.2
-    pygame.mixer.music.set_volume(vol)
 
     while True:
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
-            if vol < 0:
-                vol = 0.0
-            if vol > 1:
-                vol = 1.0
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_DOWN:
-                    vol -= 0.1
-                    pygame.mixer.music.set_volume(vol)
-                if event.key == pygame.K_UP:
-                    vol += 0.1
-                    pygame.mixer.music.set_volume(vol)
-
-        sc.fill((0, 0, 0))
         player.movement()
+        sc.fill((0, 0, 0))
 
-        # print(player.pos()[0] / TILE, player.pos()[1] / TILE)
+        ##print(player.pos()[0] / TILE, player.pos()[1] / TILE)
 
         drawing.background()
-        drawing.ray_casting((int(player.x), int(player.y)), player.angle, sc)
+        ##drawing.ray_casting((int(player.x), int(player.y)), player.angle, sc)
+        walls = drawing.ray_casting((int(player.x), int(player.y)), player.angle)
+        drawing.world(walls + [obj.object_locate(player, walls) for obj in sprites.list_of_objects])
         drawing.fps(clock)
         drawing.mini_map(player)
 
