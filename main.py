@@ -323,13 +323,31 @@ def main():
     player = Player()
     drawing = Drawing(sc, sc_map)
     pygame.mouse.set_visible(False)
+    pygame.mixer.init()
+    pygame.mixer.music.load("data/music.mp3")
+    pygame.mixer.music.play(-1, 0.0)
+    vol = 0.2
+    pygame.mixer.music.set_volume(vol)
+
+
 
     while True:
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
-        player.movement()
+            # elif event.type == pygame.KEYDOWN:
+            #     vol -= 0.1
+            #     pygame.mixer.music.set_volume(vol)
+            #     print(1, pygame.mixer.music.get_volume())
+            # elif event.type == pygame.KEYUP:
+            #     vol += 0.1
+            #     pygame.mixer.music.set_volume(vol)
+            #     print(2, pygame.mixer.music.get_volume())
+
         sc.fill((0, 0, 0))
+        player.movement()
+
 
         # print(player.pos()[0] / TILE, player.pos()[1] / TILE)
 
