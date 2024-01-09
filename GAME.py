@@ -299,8 +299,8 @@ class Drawing:
         s = ((int(map_x) - 5) // 8, (int(map_y) - 5) // 8)
         if s in MOMEY_MINI:
             pygame.mixer.music.load('data/coin.mp3')
-            pygame.mixer.music.play(1)
-            pygame.mixer.music.set_volume(0.5)
+            pygame.mixer.Channel(1).play(pygame.mixer.Sound('data/coin.mp3'))
+            pygame.mixer.Channel(1).set_volume(0.7)
             d = MOMEY_MINI.index(s)
             if d == 0:
                 TRUE_1 = False
@@ -395,9 +395,9 @@ def main():
     pygame.mouse.set_visible(False)
     pygame.mixer.init()
     pygame.mixer.music.load("data/music2.mp3")
-    pygame.mixer.music.play(-1, 0.0)
-    vol = 0.2
-    pygame.mixer.music.set_volume(vol)
+    pygame.mixer.Channel(0).play(pygame.mixer.Sound("data/music2.mp3"))
+    vol = 0.5
+    pygame.mixer.Channel(0).set_volume(vol)
 
     while True:
         for event in pygame.event.get():
@@ -411,11 +411,11 @@ def main():
                 if event.key == pygame.K_DOWN:
                     vol -= 0.1
                     pygame.mixer.music.set_volume(vol)
-                    #  print(pygame.mixer.music.get_volume())
+                    print(pygame.mixer.music.get_volume())
                 if event.key == pygame.K_UP:
                     vol += 0.1
                     pygame.mixer.music.set_volume(vol)
-                    # print(pygame.mixer.music.get_volume())
+                    print(pygame.mixer.music.get_volume())
         player.movement()
         sc.fill((0, 0, 0))
 
