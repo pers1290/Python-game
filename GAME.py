@@ -147,6 +147,7 @@ class Player:
         self.side = 50
         self.rect1 = pygame.Rect(*player_pos, self.side, self.side)
 
+    @property
     def pos(self):
         return self.x, self.y
 
@@ -242,7 +243,7 @@ class Drawing:
 
     def world(self, world_objects):
         for obj in sorted(world_objects, key=lambda n: n[0], reverse=True):
-            if obj[0]:
+            if obj[0] and obj[1] != 0:
                 _, object, object_pos = obj
                 self.sc.blit(object, object_pos)
 
@@ -378,7 +379,7 @@ class SpriteObject:
     def __init__(self, object, static, pos, shift, scale):
         self.object = object
         self.static = static
-        self.pas = self.x, self.y = pos[0] * TILE, pos[1] * TILE
+        self.pоs = self.x, self.y = pos[0] * TILE, pos[1] * TILE
         self.shift = shift
         self.scale = scale
 
@@ -411,6 +412,19 @@ class SpriteObject:
             return (False,)
 
 
+class Interaction:
+    def __init__(self, player, sprites, drawing):
+        self.player = player
+        self.sprites = sprites
+        self. drawing = drawing
+
+    def npc_move(self, obj, walls):
+        dx = obj.x - self.player.pos[0]
+        dy = obj.y - self.player.pos[1]
+        obj.x = obj.x + 2 if dx < 0 else obj.x - 2
+        obj.y = obj.y + 2 if dy < 0 else obj.y - 2
+
+
 def main():
     pygame.init()
     sc = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -419,6 +433,7 @@ def main():
     sprites = Sprites()
     player = Player()
     drawing = Drawing(sc, sc_map)
+    interaction = Interaction(player, sprites, drawing)
     pygame.mouse.set_visible(False)
     pygame.mixer.init()
     pygame.mixer.music.load("data/music2.mp3")
@@ -451,6 +466,7 @@ def main():
         drawing.world(walls + [obj.object_locate(player, walls) for obj in sprites.list_of_objects])
         drawing.fps(clock)
         drawing.mini_map(player)
+        interaction.npc_move(sprites.list_of_objects[-1], walls)
         clock.tick(60)
 
         pygame.display.flip()
