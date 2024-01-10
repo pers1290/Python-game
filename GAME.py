@@ -10,6 +10,7 @@ HALF_HEIGHT = HEIGHT // 2
 FPS = 60
 TILE = 100
 FPS_POS = (WIDTH - 65, 5)
+TIME_POS = (0, 0)
 SENSETIV = 0.003
 
 # текстуры
@@ -307,6 +308,11 @@ class Drawing:
         rend = self.font.render(d_fps, 0, (0, 150, 0))
         self.sc.blit(rend, FPS_POS)
 
+    def time(self):
+        d_time = f'Время прохождения: {str(int(pygame.time.get_ticks()) // 1000)}'
+        rend = self.font.render(d_time, 0, (0, 150, 0))
+        self.sc.blit(rend, TIME_POS)
+
     def mini_map(self, player):
         global A
         global ANGLE
@@ -465,6 +471,7 @@ def main():
         walls = drawing.ray_casting((int(player.x), int(player.y)), player.angle)
         drawing.world(walls + [obj.object_locate(player, walls) for obj in sprites.list_of_objects])
         drawing.fps(clock)
+        drawing.time()
         drawing.mini_map(player)
         interaction.npc_move(sprites.list_of_objects[-1], walls)
         clock.tick(60)
