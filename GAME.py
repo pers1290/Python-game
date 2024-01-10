@@ -331,6 +331,7 @@ class Sprites:
         # f = TRUE_1
         self.sprite_types = {
             'money': pygame.image.load('data/coi.png').convert_alpha(),
+            'sirenhead': pygame.image.load('data/lol.png').convert_alpha()
         }
         self.list_of_objects = [
             SpriteObject(self.sprite_types['money'], True, (2.28, 1.67), 1.8, 0.4),
@@ -343,7 +344,8 @@ class Sprites:
             SpriteObject(self.sprite_types['money'], True, (23.28, 3.57), 1.8, 0.4),
             SpriteObject(self.sprite_types['money'], True, (29.47, 15.73), 1.8, 0.4),
             SpriteObject(self.sprite_types['money'], True, (6.60, 2.57), 1.8, 0.4),
-            SpriteObject(self.sprite_types['money'], True, (20.60, 11.60), 1.8, 0.4)
+            SpriteObject(self.sprite_types['money'], True, (20.60, 11.60), 1.8, 0.4),
+            SpriteObject(self.sprite_types['sirenhead'], True, (13.80, 11), 0.5, 0.8)
         ]
 
 
