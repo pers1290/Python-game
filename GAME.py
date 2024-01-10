@@ -82,6 +82,30 @@ text_map = [
 
 ]
 
+text_map2 = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1],
+    [1, _, _, _, 1, _, 1, 1, _, _, 1, _, 1, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 1],
+    [1, _, 2, _, 1, _, _, _, _, _, 6, _, 1, _, 1, 2, 1, 1, 1, _, 5, 3, 1, 1, 1, _, 1, 1, 1, 1, 1, _, 1],
+    [1, _, 7, _, 1, _, 1, 6, 6, _, 1, _, 1, _, 1, _, _, _, 7, _, 1, _, _, _, 1, _, 1, _, _, _, 1, _, 1],
+    [1, _, _, _, 1, _, _, 6, 6, _, _, _, 1, _, 1, _, 1, _, _, _, 4, _, 1, _, _, _, 5, _, 6, _, 1, _, 3],
+    [1, _, 1, 4, 1, 1, _, 6, 6, _, 7, _, 1, _, 1, _, 7, 7, 1, 1, 1, _, 1, _, 1, 1, 1, _, 1, _, 1, _, 6],
+    [1, _, 9, _, _, _, _, _, _, _, 1, _, 1, _, 1, _, _, _, _, _, _, _, _, _, 1, 7, 1, _, 1, _, _, _, 6],
+    [1, _, 1, _, 1, 1, _, 1, 1, 1, 1, _, 1, _, _, _, 1, 1, _, 1, _, 1, 1, 1, 1, _, 1, _, _, _, 1, _, 6],
+    [1, _, 1, _, _, _, _, 2, 1, _, _, _, 1, 5, 1, 1, 1, 1, _, 1, _, _, _, _, _, _, _, 1, 1, 9, 1, _, 6],
+    [1, _, 1, _, 1, _, _, _, _, _, 1, _, _, _, _, _, _, 1, _, 1, 1, 1, 7, 1, 1, 1, _, _, _, _, 9, _, 6],
+    [1, _, 1, _, 1, _, 5, _, 9, 1, 1, 1, 1, _, 1, _, _, 1, _, 1, _, _, _, _, _, _, _, _, 1, _, 1, _, 4],
+    [1, _, 3, _, 1, _, 5, _, _, _, _, _, 1, _, 1, 1, _, 1, _, 1, _, 1, _, _, _, 1, 1, 1, 1, _, 6, _, 1],
+    [1, _, 6, _, 5, _, 5, _, 1, 6, _, _, 1, _, 7, 1, _, 6, _, 1, _, 1, _, 7, 1, 1, _, _, _, _, 1, _, 7],
+    [1, _, 1, _, 1, _, _, _, 1, 3, _, 1, 8, _, 8, 1, _, 7, _, 4, _, 1, 1, 1, 1, 7, _, 6, 6, _, 1, _, 1],
+    [1, _, 1, _, 1, _, 1, 1, 1, _, _, 1, 8, _, 8, 1, _, 1, _, _, _, _, _, _, _, _, _, 6, 6, _, 1, _, 1],
+    [1, _, 1, _, _, _, 1, _, _, _, 7, 1, 8, 8, 8, 6, _, 5, 1, 9, 1, 1, 1, 1, 1, 1, _, _, _, _, 1, _, 1],
+    [1, _, 1, 1, 9, 1, 4, _, 1, _, _, _, 1, 1, 1, 7, _, _, _, _, _, _, _, _, _, 1, 4, 1, 6, 1, 9, _, 1],
+    [1, _, _, _, _, _, _, _, 9, 1, 1, _, _, _, _, _, _, _, 1, 1, _, _, 4, 3, _, _, _, _, _, _, _, _, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1]
+
+]
+
+
 WORLD_WIDTH = len(text_map[0]) * TILE
 WORLD_HEIGHT = len(text_map[0]) * TILE
 world_map = {}
@@ -123,7 +147,6 @@ class Player:
         self.side = 50
         self.rect1 = pygame.Rect(*player_pos, self.side, self.side)
 
-    @property
     def pos(self):
         return self.x, self.y
 
@@ -219,7 +242,7 @@ class Drawing:
 
     def world(self, world_objects):
         for obj in sorted(world_objects, key=lambda n: n[0], reverse=True):
-            if obj[0] and obj[1] != 0:
+            if obj[0]:
                 _, object, object_pos = obj
                 self.sc.blit(object, object_pos)
 
@@ -326,6 +349,7 @@ class Drawing:
         self.sc.blit(rend1, (250, HEIGHT - 65))
 
 
+
 class Sprites:
     def __init__(self):
         # global TRUE_1
@@ -354,7 +378,7 @@ class SpriteObject:
     def __init__(self, object, static, pos, shift, scale):
         self.object = object
         self.static = static
-        self.pos = self.x, self.y = pos[0] * TILE, pos[1] * TILE
+        self.pas = self.x, self.y = pos[0] * TILE, pos[1] * TILE
         self.shift = shift
         self.scale = scale
 
@@ -387,20 +411,6 @@ class SpriteObject:
             return (False,)
 
 
-class Interaction:
-    def __init__(self, player, sprites, drawing):
-        self.player = player
-        self.sprites = sprites
-        self. drawing = drawing
-
-    def npc_move(self, obj, walls):
-        dx = obj.x - self.player.pos[0]
-        dy = obj.y - self.player.pos[1]
-        obj.x = obj.x + 2 if dx < 0 else obj.x - 2
-        obj.y = obj.y + 2 if dy < 0 else obj.y - 2
-
-
-
 def main():
     pygame.init()
     sc = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -409,7 +419,6 @@ def main():
     sprites = Sprites()
     player = Player()
     drawing = Drawing(sc, sc_map)
-    interaction = Interaction(player, sprites, drawing)
     pygame.mouse.set_visible(False)
     pygame.mixer.init()
     pygame.mixer.music.load("data/music2.mp3")
@@ -442,7 +451,6 @@ def main():
         drawing.world(walls + [obj.object_locate(player, walls) for obj in sprites.list_of_objects])
         drawing.fps(clock)
         drawing.mini_map(player)
-        interaction.npc_move(sprites.list_of_objects[-1], walls)
         clock.tick(60)
 
         pygame.display.flip()
