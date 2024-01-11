@@ -15,6 +15,7 @@ FPS_POS = (WIDTH - 65, 5)
 TIME_POS = (10, 10)
 LIFE1 = 3
 LIFE_POS = (10, 40)
+LVL = 1
 SENSETIV = 0.003
 
 # текстуры
@@ -371,7 +372,7 @@ class Drawing:
             self.sc_map.blit(rot_coin, rot_coin.get_rect(center=(i[0] * g * 8 + jk, i[1] * g * 8 + jk)))
         self.sc.blit(self.sc_map, MAP_POS)
         a2 = 11
-        l = 1
+        l = LVL
         lvl = f'lvl: {l}'
         text = f'Собрано: {A} из {a2}'
         rend1 = myfont.render(lvl, 0, (50, 0, 0))
