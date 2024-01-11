@@ -320,7 +320,7 @@ class Drawing:
         if time < 10:
             time = f'0{time}'
 
-        d_time = f'Время прохождения: {minut}:{time}'
+        d_time = f'Время прохождения: {minut}.{time}'
         myfont = pygame.font.Font("shrift.ttf", 24)
         rend = myfont.render(d_time, 0, (0, 150, 0))
         self.sc.blit(rend, TIME_POS)
@@ -329,28 +329,6 @@ class Drawing:
         d_life = f'Осталось {LIFE1} жизни'
         myfont = pygame.font.Font("shrift.ttf", 24)
         rend = myfont.render(d_life, 0, (0, 150, 0))
-        self.sc.blit(rend, LIFE_POS)
-
-    def time(self):
-        time = int((pygame.time.get_ticks() // 1000))
-        minut = 0
-        while time > 60:
-            minut += 1
-            time -= 60
-        if time < 10:
-            time = f'0{time}'
-
-        d_time = f'Время прохождения: {minut}:{time}'
-        rend = self.font.render(d_time, 0, (0, 150, 0))
-        self.sc.blit(rend, TIME_POS)
-
-    def life(self):
-        a = ''
-        for _ in range(LIFE1):
-            a += '\u2764\uFE0F'
-        d_life = a
-        # print(d_life)
-        rend = self.font.render(d_life, 0, (0, 150, 0))
         self.sc.blit(rend, LIFE_POS)
 
     def mini_map(self, player):
@@ -487,6 +465,9 @@ def main():
     fom = pygame.transform.scale(fon, (1200, 800))
     fon2 = pygame.image.load('data/meny2.png').convert()
     fom2 = pygame.transform.scale(fon2, (1200, 800))
+    # pygame.mixer.Channel(2).play(pygame.mixer.Sound("data/priexal.mp3"))
+    # pygame.mixer.Channel(2).set_volume(0.5)
+
 
     FLAG_1 = True
     FLAG_2 = False
