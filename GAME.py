@@ -468,8 +468,10 @@ def main():
     pygame.mixer.init()
     pygame.mixer.music.load("data/music2.mp3")
     pygame.mixer.Channel(0).play(pygame.mixer.Sound("data/music2.mp3"))
+    pygame.mixer.Channel(2).play(pygame.mixer.Sound("data/priexal.mp3"))
     vol = 0.5
     pygame.mixer.Channel(0).set_volume(vol)
+    pygame.mixer.Channel(2).set_volume(0.5)
 
     while True:
         for event in pygame.event.get():
