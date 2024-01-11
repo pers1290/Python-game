@@ -1,6 +1,8 @@
 import pygame
 import math
 import copy
+import time
+import datetime
 
 # игровые настройки
 WIDTH = 1200
@@ -10,7 +12,9 @@ HALF_HEIGHT = HEIGHT // 2
 FPS = 60
 TILE = 100
 FPS_POS = (WIDTH - 65, 5)
-TIME_POS = (0, 0)
+TIME_POS = (10, 10)
+LIFE1 = 3
+LIFE_POS = (10, 40)
 SENSETIV = 0.003
 
 # текстуры
@@ -48,6 +52,8 @@ MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20
 TRUE_1 = True
 A = 0
 ANGLE = 0
+
+
 
 
 def player_speed():
@@ -309,9 +315,27 @@ class Drawing:
         self.sc.blit(rend, FPS_POS)
 
     def time(self):
-        d_time = f'Время прохождения: {str(int(pygame.time.get_ticks()) // 1000)}'
+        time = int((pygame.time.get_ticks() // 1000))
+        minut = 0
+        while time > 60:
+            minut += 1
+            time -= 60
+        if time < 10:
+            time = f'0{time}'
+
+        d_time = f'Время прохождения: {minut}:{time}'
         rend = self.font.render(d_time, 0, (0, 150, 0))
         self.sc.blit(rend, TIME_POS)
+
+    def life(self):
+        a = ''
+        for _ in range(LIFE1):
+            a += '\u2764\uFE0F'
+        d_life = a
+        print(d_life)
+        rend = self.font.render(d_life, 0, (0, 150, 0))
+        self.sc.blit(rend, LIFE_POS)
+
 
     def mini_map(self, player):
         global A
@@ -472,6 +496,7 @@ def main():
         drawing.world(walls + [obj.object_locate(player, walls) for obj in sprites.list_of_objects])
         drawing.fps(clock)
         drawing.time()
+        drawing.life()
         drawing.mini_map(player)
         interaction.npc_move(sprites.list_of_objects[-1], walls)
         clock.tick(60)
