@@ -311,7 +311,8 @@ class Drawing:
 
     def fps(self, clock):
         d_fps = str(int(clock.get_fps()))
-        rend = self.font.render(d_fps, 0, (0, 150, 0))
+        myfont = pygame.font.Font("shrift.ttf", 24)
+        rend = myfont.render(d_fps, 0, (0, 150, 0))
         self.sc.blit(rend, FPS_POS)
 
     def time(self):
@@ -324,16 +325,14 @@ class Drawing:
             time = f'0{time}'
 
         d_time = f'Время прохождения: {minut}:{time}'
-        rend = self.font.render(d_time, 0, (0, 150, 0))
+        myfont = pygame.font.Font("shrift.ttf", 24)
+        rend = myfont.render(d_time, 0, (0, 150, 0))
         self.sc.blit(rend, TIME_POS)
 
     def life(self):
-        a = ''
-        for _ in range(LIFE1):
-            a += '\u2764\uFE0F'
-        d_life = a
-        print(d_life)
-        rend = self.font.render(d_life, 0, (0, 150, 0))
+        d_life = f'Осталось {LIFE1} жизни'
+        myfont = pygame.font.Font("shrift.ttf", 24)
+        rend = myfont.render(d_life, 0, (0, 150, 0))
         self.sc.blit(rend, LIFE_POS)
 
 
@@ -344,6 +343,7 @@ class Drawing:
         sprite = Sprites()
         g = 1.15
         jk = 2.5
+        myfont = pygame.font.Font("shrift.ttf", 24)
         money = pygame.image.load('data/coi.png').convert_alpha()
         new_money = pygame.transform.scale(money, (8, 8))
         self.sc_map.fill((100, 100, 100))
@@ -373,9 +373,9 @@ class Drawing:
         a2 = 11
         l = 1
         lvl = f'lvl: {l}'
-        text = f'Собрано: {A} /{a2}'
-        rend1 = self.font.render(lvl, 0, (50, 0, 0))
-        rend = self.font.render(text, 0, (50, 0, 0))
+        text = f'Собрано: {A} из {a2}'
+        rend1 = myfont.render(lvl, 0, (50, 0, 0))
+        rend = myfont.render(text, 0, (50, 0, 0))
         self.sc.blit(rend, (30, HEIGHT - 65))
         self.sc.blit(rend1, (250, HEIGHT - 65))
 
