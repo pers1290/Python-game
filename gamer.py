@@ -16,7 +16,7 @@ SENSETIV = 0.003
 TIME_POS = (10, 10)
 LIFE1 = 3
 LIFE_POS = (10, 40)
-
+LVL = 1
 # текстуры
 TEXTURE_WIDTH = 1080
 TEXTURE_HEIGHT = 1080
@@ -307,7 +307,8 @@ class Drawing:
 
     def fps(self, clock):
         d_fps = str(int(clock.get_fps()))
-        rend = self.font.render(d_fps, 0, (0, 150, 0))
+        myfont = pygame.font.Font("shrift.ttf", 24)
+        rend = myfont.render(d_fps, 0, (0, 150, 0))
         self.sc.blit(rend, FPS_POS)
 
     def time(self):
@@ -320,16 +321,14 @@ class Drawing:
             time = f'0{time}'
 
         d_time = f'Время прохождения: {minut}:{time}'
-        rend = self.font.render(d_time, 0, (0, 150, 0))
+        myfont = pygame.font.Font("shrift.ttf", 24)
+        rend = myfont.render(d_time, 0, (0, 150, 0))
         self.sc.blit(rend, TIME_POS)
 
     def life(self):
-        a = ''
-        for _ in range(LIFE1):
-            a += '\u2764\uFE0F'
-        d_life = a
-        print(d_life)
-        rend = self.font.render(d_life, 0, (0, 150, 0))
+        d_life = f'Осталось {LIFE1} жизни'
+        myfont = pygame.font.Font("shrift.ttf", 24)
+        rend = myfont.render(d_life, 0, (0, 150, 0))
         self.sc.blit(rend, LIFE_POS)
 
     def time(self):
@@ -384,11 +383,12 @@ class Drawing:
             self.sc_map.blit(rot_coin, rot_coin.get_rect(center=(i[0] * g * 8 + jk, i[1] * g * 8 + jk)))
         self.sc.blit(self.sc_map, MAP_POS)
         a2 = 11
-        l = 1
+        l = LVL
         lvl = f'lvl: {l}'
-        text = f'Собрано: {A} /{a2}'
-        rend1 = self.font.render(lvl, 0, (50, 0, 0))
-        rend = self.font.render(text, 0, (50, 0, 0))
+        myfont = pygame.font.Font("shrift.ttf", 24)
+        text = f'Собрано: {A} из {a2}'
+        rend1 = myfont.render(lvl, 0, (50, 0, 0))
+        rend = myfont.render(text, 0, (50, 0, 0))
         self.sc.blit(rend, (30, HEIGHT - 65))
         self.sc.blit(rend1, (250, HEIGHT - 65))
 
