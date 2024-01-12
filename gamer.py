@@ -16,7 +16,7 @@ SENSETIV = 0.003
 TIME_POS = (10, 10)
 LIFE1 = 3
 LIFE_POS = (10, 40)
-LVL = 1
+
 # текстуры
 TEXTURE_WIDTH = 1080
 TEXTURE_HEIGHT = 1080
@@ -51,6 +51,7 @@ MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20
               (29, 15), (30, 6)]
 A = 0
 ANGLE = 0
+LVL = 1
 
 
 def player_speed():
@@ -307,8 +308,7 @@ class Drawing:
 
     def fps(self, clock):
         d_fps = str(int(clock.get_fps()))
-        myfont = pygame.font.Font("shrift.ttf", 24)
-        rend = myfont.render(d_fps, 0, (0, 150, 0))
+        rend = self.font.render(d_fps, 0, (0, 150, 0))
         self.sc.blit(rend, FPS_POS)
 
     def time(self):
@@ -320,14 +320,27 @@ class Drawing:
         if time < 10:
             time = f'0{time}'
 
+        d_time = f'Время прохождения: {minut}:{time}'
+        rend = self.font.render(d_time, 0, (0, 150, 0))
+        self.sc.blit(rend, TIME_POS)
+
+    def time(self):
+        time = int((pygame.time.get_ticks() // 1000))
+        minut = 0
+        while time > 60:
+            minut += 1
+            time -= 60
+        if time < 10:
+            time = f'0{time}'
+
         d_time = f'Время прохождения: {minut}.{time}'
-        myfont = pygame.font.Font("shrift.ttf", 24)
+        myfont = pygame.font.Font("data/shrift.ttf", 24)
         rend = myfont.render(d_time, 0, (0, 150, 0))
         self.sc.blit(rend, TIME_POS)
 
     def life(self):
         d_life = f'Осталось {LIFE1} жизни'
-        myfont = pygame.font.Font("shrift.ttf", 24)
+        myfont = pygame.font.Font("data/shrift.ttf", 24)
         rend = myfont.render(d_life, 0, (0, 150, 0))
         self.sc.blit(rend, LIFE_POS)
 
@@ -363,7 +376,7 @@ class Drawing:
         a2 = 11
         l = LVL
         lvl = f'lvl: {l}'
-        myfont = pygame.font.Font("shrift.ttf", 24)
+        myfont = pygame.font.Font("data/shrift.ttf", 24)
         text = f'Собрано: {A} из {a2}'
         rend1 = myfont.render(lvl, 0, (50, 0, 0))
         rend = myfont.render(text, 0, (50, 0, 0))
@@ -447,6 +460,8 @@ def main():
         ['money', True, (6.60, 2.57), 1.8, 0.4],
         ['money', True, (20.60, 11.60), 1.8, 0.4]
     ]
+    user_text = ''
+    posis = [(), (2, 1), (5, 13), (3, 15), (11, 16), (20, 17), (30, 6), (13, 1), (23, 3), (29, 15), (6, 2), (20, 11)]
 
     pygame.init()
     sc = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -457,24 +472,34 @@ def main():
     drawing = Drawing(sc, sc_map)
     interaction = Interaction(player, sprites, drawing)
     pygame.mixer.init()
+    pygame.font.init()
+    f = pygame.font.Font("data/shrift.ttf", 130)
     pygame.mixer.music.load("data/music2.mp3")
     pygame.mixer.Channel(0).play(pygame.mixer.Sound("data/music2.mp3"))
+    # pygame.mixer.Channel(2).play(pygame.mixer.Sound("data/priexal.mp3"))
     vol = 0.5
     pygame.mixer.Channel(0).set_volume(vol)
     fon = pygame.image.load('data/meny.png').convert()
     fom = pygame.transform.scale(fon, (1200, 800))
     fon2 = pygame.image.load('data/meny2.png').convert()
     fom2 = pygame.transform.scale(fon2, (1200, 800))
-    # pygame.mixer.Channel(2).play(pygame.mixer.Sound("data/priexal.mp3"))
+    fon3 = pygame.image.load('data/meny3.png').convert()
+    fom3 = pygame.transform.scale(fon3, (1200, 800))
+    image = pygame.image.load('data/arrow.png').convert_alpha()
+    pygame.mixer.Channel(0).set_volume(vol)
+    pygame.mouse.set_visible(False)
     # pygame.mixer.Channel(2).set_volume(0.5)
-
 
     FLAG_1 = True
     FLAG_2 = False
     FLAG_3 = False
+    FLAG_4 = False
+    FLAG_5 = False
     global A
+    x, y = 0, 0
 
     while True:
+
         if FLAG_1:
             sc.blit(fom, (0, 0))
             for event in pygame.event.get():
@@ -484,10 +509,18 @@ def main():
                     x, y = event.pos
                     if x <= 678 and x >= 523 and y <= 418 and y >= 275:
                         FLAG_1 = False
-                        FLAG_3 = True
+                        if user_text == '':
+                            FLAG_3 = True
+                        else:
+                            FLAG_4 = True
                     if x <= 1187 and x >= 1068 and y <= 124 and y >= 8:
                         FLAG_1 = False
                         FLAG_2 = True
+                if event.type == pygame.MOUSEMOTION:
+                    sc.blit(image, event.pos)
+                    x, y = event.pos
+            if x != 0 and y != 0:
+                sc.blit(image, (x, y))
             pygame.display.flip()
 
         if FLAG_2:
@@ -498,12 +531,102 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     if x <= 1187 and x >= 1068 and y <= 124 and y >= 8:
-                        FLAG_1 = True
                         FLAG_2 = False
+                        if user_text == '':
+                            FLAG_1 = True
+                        else:
+                            FLAG_3 = True
+                            user_text = ''
+                if event.type == pygame.MOUSEMOTION:
+                    sc.blit(image, event.pos)
+                    x, y = event.pos
+            if x != 0 and y != 0:
+                sc.blit(image, (x, y))
             pygame.display.flip()
 
         if FLAG_3:
-            pygame.mouse.set_visible(False)
+            sc.blit(fom3, (0, 0))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = event.pos
+                    # print(x, y)
+                    if x <= 678 and x >= 523 and y <= 418 and y >= 275:
+                        FLAG_1 = True
+                        FLAG_3 = False
+                    if x <= 1187 and x >= 1068 and y <= 124 and y >= 8:
+                        FLAG_2 = True
+                        FLAG_3 = False
+                if event.type == pygame.MOUSEMOTION:
+                    sc.blit(image, event.pos)
+                    x, y = event.pos
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE:
+                        user_text = user_text[:-1]
+                    if len(user_text) < 8:
+                        if event.key == pygame.K_a:
+                            user_text += 'a'
+                        if event.key == pygame.K_b:
+                            user_text += 'b'
+                        if event.key == pygame.K_c:
+                            user_text += 'c'
+                        if event.key == pygame.K_d:
+                            user_text += 'd'
+                        if event.key == pygame.K_e:
+                            user_text += 'e'
+                        if event.key == pygame.K_f:
+                            user_text += 'f'
+                        if event.key == pygame.K_g:
+                            user_text += 'g'
+                        if event.key == pygame.K_h:
+                            user_text += 'h'
+                        if event.key == pygame.K_i:
+                            user_text += 'i'
+                        if event.key == pygame.K_j:
+                            user_text += 'j'
+                        if event.key == pygame.K_k:
+                            user_text += 'k'
+                        if event.key == pygame.K_l:
+                            user_text += 'l'
+                        if event.key == pygame.K_m:
+                            user_text += 'm'
+                        if event.key == pygame.K_n:
+                            user_text += 'n'
+                        if event.key == pygame.K_o:
+                            user_text += 'o'
+                        if event.key == pygame.K_p:
+                            user_text += 'p'
+                        if event.key == pygame.K_q:
+                            user_text += 'q'
+                        if event.key == pygame.K_r:
+                            user_text += 'r'
+                        if event.key == pygame.K_s:
+                            user_text += 's'
+                        if event.key == pygame.K_t:
+                            user_text += 't'
+                        if event.key == pygame.K_u:
+                            user_text += 'u'
+                        if event.key == pygame.K_v:
+                            user_text += 'v'
+                        if event.key == pygame.K_w:
+                            user_text += 'w'
+                        if event.key == pygame.K_x:
+                            user_text += 'x'
+                        if event.key == pygame.K_y:
+                            user_text += 'y'
+                        if event.key == pygame.K_z:
+                            user_text += 'z'
+
+            st_text = f.render(user_text, 0, (94, 138, 14))
+            sc.blit(st_text, (321, 440))
+            if x != 0 and y != 0:
+                sc.blit(image, (x, y))
+            pygame.display.flip()
+
+        if FLAG_4:
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
@@ -543,38 +666,28 @@ def main():
             pygame.display.flip()
             clock.tick()
 
-            if x_new == 2 and y_new == 1:
-                sprites.list_of_objects[1] = 1
+            if (x_new, y_new) in posis:
+                s = posis.index((x_new, y_new))
+                sprites.list_of_objects[s] = 1
 
-            if x_new == 5 and y_new == 13:
-                sprites.list_of_objects[2] = 1
+            if x_new == 13 and y_new == 14 and A == 11:
+                FLAG_4 = False
+                FLAG_5 = True
 
-            if x_new == 3 and y_new == 15:
-                sprites.list_of_objects[3] = 1
+        if FLAG_5:
+            sc.fill((0, 0, 0))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                if event.type == pygame.MOUSEMOTION:
+                    sc.blit(image, event.pos)
+                    x, y = event.pos
+            st_text = f.render('LEVAL 2', 0, (255, 0, 0))
+            sc.blit(st_text, (380, 330))
+            if x != 0 and y != 0:
+                sc.blit(image, (x, y))
 
-            if x_new == 11 and y_new == 16:
-                sprites.list_of_objects[4] = 1
-
-            if x_new == 20 and y_new == 17:
-                sprites.list_of_objects[5] = 1
-
-            if x_new == 30 and y_new == 6:
-                sprites.list_of_objects[6] = 1
-
-            if x_new == 13 and y_new == 1:
-                sprites.list_of_objects[7] = 1
-
-            if x_new == 23 and y_new == 3:
-                sprites.list_of_objects[8] = 1
-
-            if x_new == 29 and y_new == 15:
-                sprites.list_of_objects[9] = 1
-
-            if x_new == 6 and y_new == 2:
-                sprites.list_of_objects[10] = 1
-
-            if x_new == 20 and y_new == 11:
-                sprites.list_of_objects[11] = 1
+            pygame.display.flip()
 
 
 if __name__ == '__main__':
