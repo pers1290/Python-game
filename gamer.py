@@ -602,7 +602,7 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_BACKSPACE:
                         user_text = user_text[:-1]
-                    if len(user_text) < 8:
+                    if len(user_text) < 7:
                         if event.key == pygame.K_a:
                             user_text += 'a'
                         if event.key == pygame.K_b:
