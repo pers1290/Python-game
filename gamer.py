@@ -39,7 +39,7 @@ PROJ_COEFF = 3 * DIST * TILE
 SCALE = WIDTH // NUM_RAYS
 
 # игрок
-player_pos = (1350, 1450)
+player_pos = (1351, 1451)
 player_angle = 300
 
 # спрайты
@@ -410,6 +410,7 @@ class SpriteObject:
 
         if 0 <= current_ray <= NUM_RAYS - 1 and distance_to_sprite < walls[current_ray][0]:
             proj_height = min(int(PROJ_COEFF / distance_to_sprite * self.scale), 2 * HEIGHT)
+            proj_height = max(proj_height, 0.00001)
             half_proj_height = proj_height // 2
             shift = half_proj_height * self.shift
 
