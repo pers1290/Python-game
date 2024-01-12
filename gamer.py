@@ -655,6 +655,11 @@ def main():
                         if event.key == pygame.K_z:
                             user_text += 'z'
 
+            d_name = f'Введите своё имя'
+            myfont = pygame.font.Font("data/shrift.ttf", 50)
+            rend = myfont.render(d_name, 0, (180, 180, 180))
+            sc.blit(rend, (420, 200))
+
             st_text = f.render(user_text, 0, (94, 138, 14))
             sc.blit(st_text, (321, 440))
             if x != 0 and y != 0:
@@ -717,6 +722,21 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
+                if vol < 0:
+                    vol = 0.0
+                if vol > 1:
+                    vol = 1.0
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit()
+                    if event.key == pygame.K_DOWN:
+                        vol -= 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                    if event.key == pygame.K_UP:
+                        vol += 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEMOTION:
                     sc.blit(image, event.pos)
                     x, y = event.pos
