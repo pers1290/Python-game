@@ -57,9 +57,9 @@ LVL = 1
 def player_speed():
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LSHIFT]:
-        return 15.1
+        return 7
     else:
-        return 3.1
+        return 5
 
 
 # карта
@@ -68,8 +68,8 @@ text_map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1],
     [1, _, _, _, 1, 1, 1, 1, _, _, 1, _, 1, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 1],
     [1, _, 2, _, _, 3, _, _, _, _, 6, _, 1, _, 1, 2, 1, 1, 1, _, 5, 3, 1, 1, 1, _, 1, 1, 1, 1, 1, _, 1],
-    [1, _, 7, _, _, 1, _, 6, 6, _, 1, _, 1, _, 1, _, _, _, _, 1, 1, _, _, _, 1, _, _, _, _, _, 1, _, 1],
-    [1, _, 1, _, _, 1, _, 6, 6, _, _, _, 1, _, 1, _, 1, 7, _, _, _, _, 1, _, _, _, _, 5, 6, _, 1, _, 3],
+    [1, _, 7, _, _, 1, _, 6, 6, _, 1, _, 1, _, 1, _, _, _, 1, 1, 1, _, _, _, 1, _, _, _, _, _, 1, _, 1],
+    [1, _, 1, _, _, 1, _, 6, 6, _, _, _, 1, _, 1, _, 1, _, _, _, _, _, 1, _, _, _, _, 5, 6, _, 1, _, 3],
     [1, _, 1, _, _, 1, _, 6, 6, _, 7, _, 1, _, 1, _, 7, 7, 1, 1, 1, _, 1, _, 1, 1, _, 1, 1, _, 1, _, 6],
     [1, _, 9, _, _, 1, _, _, _, _, 1, _, 1, _, 1, _, _, _, _, _, _, _, _, _, 1, 7, _, _, 1, _, _, _, 6],
     [1, _, 1, _, _, 1, 2, 1, 1, 1, 1, _, 1, _, _, _, 1, 1, _, 1, _, 1, 1, 1, 1, _, _, _, 1, _, 1, _, 6],
@@ -80,7 +80,7 @@ text_map = [
     [1, _, 6, _, 5, _, 5, _, 1, _, 1, _, 1, _, 7, 1, _, 6, _, 1, 4, 1, _, 7, _, 1, _, _, _, _, 1, _, 7],
     [1, _, 1, _, 1, _, _, _, 1, _, _, 1, 8, _, 8, 1, _, 7, _, 4, _, 1, 1, 1, 1, 7, _, 6, 6, _, 1, _, 1],
     [1, _, 1, _, 1, 1, 1, 1, 1, _, _, 1, 8, _, 8, 1, _, 1, _, _, _, _, _, _, _, _, _, 6, 6, _, 1, _, 1],
-    [1, _, 1, _, _, _, _, _, _, _, _, 1, 8, 8, 8, 6, _, 5, 1, 9, 1, 1, 1, 1, 1, 1, _, _, _, _, 1, _, 1],
+    [1, _, 1, _, _, _, _, _, _, _, 1, 1, 8, 8, 8, 6, _, 5, 1, 9, 1, 1, 1, 1, 1, 1, _, _, _, _, 1, _, 1],
     [1, _, 1, 1, 1, 1, 4, 1, 1, _, 6, _, 1, 1, 1, 7, _, _, _, _, _, _, _, _, _, 1, 4, 1, 6, 1, 9, _, 1],
     [1, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 1, 1, _, _, 4, 3, _, _, _, _, _, _, _, _, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1]
@@ -320,19 +320,6 @@ class Drawing:
         if time < 10:
             time = f'0{time}'
 
-        d_time = f'Время прохождения: {minut}:{time}'
-        rend = self.font.render(d_time, 0, (0, 150, 0))
-        self.sc.blit(rend, TIME_POS)
-
-    def time(self):
-        time = int((pygame.time.get_ticks() // 1000))
-        minut = 0
-        while time > 60:
-            minut += 1
-            time -= 60
-        if time < 10:
-            time = f'0{time}'
-
         d_time = f'Время прохождения: {minut}.{time}'
         myfont = pygame.font.Font("data/shrift.ttf", 24)
         rend = myfont.render(d_time, 0, (0, 150, 0))
@@ -360,7 +347,7 @@ class Drawing:
         if s in MOMEY_MINI:
             pygame.mixer.music.load('data/coin.mp3')
             pygame.mixer.Channel(1).play(pygame.mixer.Sound('data/coin.mp3'))
-            pygame.mixer.Channel(1).set_volume(0.7)
+            pygame.mixer.Channel(1).set_volume(0.4)
             d = MOMEY_MINI.index(s)
             del MOMEY_MINI[d]
             A += 1
@@ -475,7 +462,7 @@ def main():
     pygame.font.init()
     f = pygame.font.Font("data/shrift.ttf", 130)
     pygame.mixer.music.load("data/music2.mp3")
-    pygame.mixer.Channel(0).play(pygame.mixer.Sound("data/music2.mp3"))
+    pygame.mixer.Channel(0).play(pygame.mixer.Sound("data/music2.mp3"), -1)
     # pygame.mixer.Channel(2).play(pygame.mixer.Sound("data/priexal.mp3"))
     vol = 0.5
     pygame.mixer.Channel(0).set_volume(vol)
@@ -628,6 +615,7 @@ def main():
 
         if FLAG_4:
 
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
@@ -639,11 +627,11 @@ def main():
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
-                        pygame.mixer.music.set_volume(vol)
+                        pygame.mixer.Channel(0).set_volume(vol)
                         # print(pygame.mixer.music.get_volume())
                     if event.key == pygame.K_UP:
                         vol += 0.1
-                        pygame.mixer.music.set_volume(vol)
+                        pygame.mixer.Channel(0).set_volume(vol)
                         # print(pygame.mixer.music.get_volume())
 
             player.movement()
@@ -658,9 +646,10 @@ def main():
             walls = drawing.ray_casting((int(player.x), int(player.y)), player.angle)
             drawing.world(walls + [obj.object_locate(player, walls) for obj in sprites.list_of_objects if obj != 1])
             drawing.fps(clock)
+            drawing.time()
             drawing.mini_map(player)
             interaction.npc_move(sprites.list_of_objects[0], walls)
-            drawing.time()
+
             drawing.life()
             clock.tick(60)
 
