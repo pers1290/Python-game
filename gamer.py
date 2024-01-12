@@ -486,6 +486,7 @@ def main():
     fon3 = pygame.image.load('data/meny3.png').convert()
     fom3 = pygame.transform.scale(fon3, (1200, 800))
     image = pygame.image.load('data/arrow.png').convert_alpha()
+    image = pygame.transform.scale(image, (25, 25))
     pygame.mixer.Channel(0).set_volume(vol)
     pygame.mouse.set_visible(False)
     # pygame.mixer.Channel(2).set_volume(0.5)
