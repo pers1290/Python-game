@@ -493,6 +493,21 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
+                if vol < 0:
+                    vol = 0.0
+                if vol > 1:
+                    vol = 1.0
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit()
+                    if event.key == pygame.K_DOWN:
+                        vol -= 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                    if event.key == pygame.K_UP:
+                        vol += 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     if x <= 678 and x >= 523 and y <= 418 and y >= 275:
@@ -516,6 +531,21 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
+                if vol < 0:
+                    vol = 0.0
+                if vol > 1:
+                    vol = 1.0
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit()
+                    if event.key == pygame.K_DOWN:
+                        vol -= 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                    if event.key == pygame.K_UP:
+                        vol += 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     if x <= 1187 and x >= 1068 and y <= 124 and y >= 8:
@@ -537,6 +567,23 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
+
+
+                if vol < 0:
+                    vol = 0.0
+                if vol > 1:
+                    vol = 1.0
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit()
+                    if event.key == pygame.K_DOWN:
+                        vol -= 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                    if event.key == pygame.K_UP:
+                        vol += 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     # print(x, y)
