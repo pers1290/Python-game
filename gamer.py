@@ -588,8 +588,9 @@ def main():
                     x, y = event.pos
                     # print(x, y)
                     if x <= 678 and x >= 523 and y <= 418 and y >= 275:
-                        FLAG_1 = True
+                        FLAG_1 = False
                         FLAG_3 = False
+                        FLAG_4 = True
                     if x <= 1187 and x >= 1068 and y <= 124 and y >= 8:
                         FLAG_2 = True
                         FLAG_3 = False
