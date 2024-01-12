@@ -347,7 +347,7 @@ class Drawing:
         if s in MOMEY_MINI:
             pygame.mixer.music.load('data/coin.mp3')
             pygame.mixer.Channel(1).play(pygame.mixer.Sound('data/coin.mp3'))
-            pygame.mixer.Channel(1).set_volume(0.4)
+            pygame.mixer.Channel(1).set_volume(0.3)
             d = MOMEY_MINI.index(s)
             del MOMEY_MINI[d]
             A += 1
