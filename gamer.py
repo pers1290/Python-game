@@ -3,6 +3,8 @@ import math
 import copy
 import time
 import datetime
+import sqlite3
+
 
 # игровые настройки
 WIDTH = 1200
@@ -634,7 +636,17 @@ def main():
                     if x <= 678 and x >= 523 and y <= 418 and y >= 275:
                         FLAG_3 = False
                         if user_text != '':
-                            FLAG_4 = True
+                            print(user_text)
+                            a = 'game.db'
+                            con = sqlite3.connect(a)
+                            cur = con.cursor()
+                            if str(cur.execute(
+                                    f'''select name from game_db where name = "{user_text}"''').fetchall()) != '[]':
+                                FLAG_4 = True
+                            else:
+                                with con:
+                                    cur.execute(f'''INSERT INTO game_db(name) VALUES('{user_text}')''')
+                                FLAG_4 = True
                         else:
                             FLAG_1 = True
                     if x <= 1187 and x >= 1068 and y <= 124 and y >= 8:
