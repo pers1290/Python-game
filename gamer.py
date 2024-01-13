@@ -1,9 +1,11 @@
 import pygame
 import math
 import copy
-import time
 import datetime
 import sqlite3
+import schedule
+import time
+import functools
 
 
 # игровые настройки
@@ -56,12 +58,13 @@ MOMEY_MINI2 = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (2
 A = 0
 ANGLE = 0
 LVL = 1
+starttime = 0
 
 
 def player_speed():
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LSHIFT]:
-        return 7
+        return 20
     else:
         return 5
 
@@ -81,7 +84,7 @@ text_map = [
     [1, _, 1, _, 1, _, _, _, _, _, _, _, _, _, _, _, _, 1, _, 1, 1, _, 7, 1, 1, 1, _, _, _, _, 9, _, 6],
     [1, _, 1, _, 1, _, 5, _, 9, 1, 1, 1, 1, _, 1, _, _, 1, _, 1, _, _, _, _, _, _, _, _, 1, _, 1, _, 4],
     [1, _, _, _, 1, _, 5, _, 0, _, _, _, 1, _, 1, 1, _, 1, _, 1, _, 1, _, _, _, 1, 1, 1, 1, 1, 6, _, 1],
-    [1, _, 6, _, 5, _, 5, _, 1, _, 1, _, 1, _, 7, 1, _, 6, _, 1, 4, 1, _, 7, _, 1, _, _, _, _, 1, _, 7],
+    [1, _, 6, _, 5, _, 5, _, 1, _, 1, _, 1, _, 7, 1, _, 6, _, 1, _, 1, _, 7, _, 1, _, _, _, _, 1, _, 7],
     [1, _, 1, _, 1, _, _, _, 1, _, _, 1, 8, _, 8, 1, _, 7, _, 4, _, 1, 1, 1, 1, 7, _, 6, 6, _, 1, _, 1],
     [1, _, 1, _, 1, 1, 1, 1, 1, _, _, 1, 8, _, 8, 1, _, 1, _, _, _, _, _, _, _, _, _, 6, 6, _, 1, _, 1],
     [1, _, 1, _, _, _, _, _, _, _, 1, 1, 8, 8, 8, 6, _, 5, 1, 9, 1, 1, 1, 1, _, 1, _, _, _, _, 1, _, 1],
@@ -274,6 +277,7 @@ class Drawing:
                         8: pygame.image.load('data/e10.png').convert(),
                         9: pygame.image.load('data/e88.png').convert()
                         }
+        global starttime
 
     def background(self):
         pygame.draw.rect(self.sc, (40, 10, 0), (0, HEIGHT / 2, WIDTH, HEIGHT / 2))
@@ -345,16 +349,16 @@ class Drawing:
         rend = self.font.render(d_fps, 0, (0, 150, 0))
         self.sc.blit(rend, FPS_POS)
 
-    def time(self):
-        time = int((pygame.time.get_ticks() // 1000))
-        minut = 0
-        while time > 60:
-            minut += 1
-            time -= 60
-        if time < 10:
-            time = f'0{time}'
 
-        d_time = f'Время прохождения: {minut}.{time}'
+    def time(self):
+        time = int((pygame.time.get_ticks() // 1000)) - int(starttime)
+        minut = 0
+        while int(time) >= 60:
+            minut += 1
+            time = int(time) - 60
+        if int(time) < 10:
+            time = f'0{time}'
+        d_time = f'Время прохождения: {minut}. {time}'
         myfont = pygame.font.Font("data/shrift.ttf", 24)
         rend = myfont.render(d_time, 0, (0, 150, 0))
         self.sc.blit(rend, TIME_POS)
@@ -528,8 +532,9 @@ def main():
     FLAG_6 = False
     FLAG_7 = False
     FLAG_8 = False
+    FLAG_9 = False
     global A
-    global LVL
+    global starttime
     k = 1
     x, y = 0, 0
 
@@ -636,17 +641,22 @@ def main():
                     if x <= 678 and x >= 523 and y <= 418 and y >= 275:
                         FLAG_3 = False
                         if user_text != '':
-                            print(user_text)
+                            global LVL1
                             a = 'game.db'
                             con = sqlite3.connect(a)
                             cur = con.cursor()
                             if str(cur.execute(
                                     f'''select name from game_db where name = "{user_text}"''').fetchall()) != '[]':
+                                starttime = pygame.time.get_ticks() // 1000
                                 FLAG_4 = True
                             else:
                                 with con:
                                     cur.execute(f'''INSERT INTO game_db(name) VALUES('{user_text}')''')
+                                starttime = pygame.time.get_ticks() // 1000
                                 FLAG_4 = True
+                            con.close()
+
+
                         else:
                             FLAG_1 = True
                     if x <= 1187 and x >= 1068 and y <= 124 and y >= 8:
@@ -744,8 +754,10 @@ def main():
                 sc.blit(image, (x, y))
             pygame.display.flip()
 
-        if FLAG_4:
 
+        if FLAG_4:
+            # per = schedule.every(1).seconds.do(time)
+            # schedule.cancel_job(per)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
@@ -792,7 +804,9 @@ def main():
 
             if x_new == 13 and y_new == 14 and A == 11:
                 FLAG_4 = False
+                minut = 0
                 FLAG_5 = True
+                timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
                 A = 0
                 LVL = 2
 
@@ -823,12 +837,17 @@ def main():
                     if k == 1:
                         FLAG_5 = False
                         FLAG_6 = True
-                        k += 1
-                    else:
-                        FLAG_5 = False
-                        FLAG_8 = True
-            st_text = f.render('ВЫ ВЫЖИЛИ', 0, (0, 0, 255))
-            sc.blit(st_text, (245, 320))
+            while int(timelvl1) >= 60:
+                minut += 1
+                timelvl1 = int(timelvl1) - 60
+                if int(timelvl1) < 10:
+                    timelvl1 = f'0{timelvl1}'
+            d_time = f'Время прохождения: {minut} мин {timelvl1} сек'
+            myfont = pygame.font.Font("data/shrift.ttf", 24)
+            rend = myfont.render(d_time, 0, (0, 150, 0))
+            sc.blit(rend, (450, 500))
+            st_text = f.render('ВЫ ПРОШЛИ 1 LVL', 0, (255, 0, 0))
+            sc.blit(st_text, (100, 320))
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
             pygame.display.flip()
@@ -858,6 +877,7 @@ def main():
                     x, y = event.pos
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     FLAG_6 = False
+                    starttime = pygame.time.get_ticks() // 1000
                     FLAG_7 = True
             st_text = f.render('LEVAL 2', 0, (255, 0, 0))
             sc.blit(st_text, (380, 330))
@@ -910,10 +930,11 @@ def main():
             if (x_new, y_new) in posis:
                 s = posis.index((x_new, y_new))
                 sprites2.list_of_objects[s] = 1
-
             if x_new == 13 and y_new == 14 and A == 11:
                 FLAG_7 = False
-                FLAG_5 = True
+                minut = 0
+                FLAG_8 = True
+                timelvl2 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
                 A = 0
 
         if FLAG_8:
@@ -939,8 +960,56 @@ def main():
                 if event.type == pygame.MOUSEMOTION:
                     sc.blit(image, event.pos)
                     x, y = event.pos
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                        FLAG_8 = False
+                        FLAG_9 = True
+            while int(timelvl2) >= 60:
+                minut += 1
+                timelvl2 = int(timelvl2) - 60
+                if int(timelvl2) < 10:
+                    timelvl2 = f'0{timelvl2}'
+            d_time = f'Время прохождения: {minut} мин {timelvl2} сек'
+            myfont = pygame.font.Font("data/shrift.ttf", 24)
+            rend = myfont.render(d_time, 0, (0, 150, 0))
+            sc.blit(rend, (450, 500))
+            st_text = f.render('ВЫ ПРОШЛИ 2 LVL', 0, (255, 0, 0))
+            sc.blit(st_text, (100, 330))
+            if x != 0 and y != 0:
+                sc.blit(image, (x, y))
+
+            pygame.display.flip()
+
+
+
+        if FLAG_9:
+            sc.fill((0, 0, 0))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                if vol < 0:
+                    vol = 0.0
+                if vol > 1:
+                    vol = 1.0
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit()
+                    if event.key == pygame.K_DOWN:
+                        vol -= 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                    if event.key == pygame.K_UP:
+                        vol += 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                if event.type == pygame.MOUSEMOTION:
+                    sc.blit(image, event.pos)
+                    x, y = event.pos
             st_text = f.render('КОНЕЦ', 0, (255, 0, 0))
             sc.blit(st_text, (380, 330))
+            d_time = f'поддержка автора: 89645211748(тинькофф)'
+            myfont = pygame.font.Font("data/shrift.ttf", 24)
+            rend = myfont.render(d_time, 0, (0, 150, 0))
+            sc.blit(rend, (350, 500))
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
 
