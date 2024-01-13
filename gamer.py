@@ -49,6 +49,8 @@ FAKE_RAYS = 100
 
 MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
               (29, 15), (30, 6)]
+MOMEY_MINI2 = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
+               (29, 15), (30, 6)]
 A = 0
 ANGLE = 0
 LVL = 1
@@ -80,7 +82,7 @@ text_map = [
     [1, _, 6, _, 5, _, 5, _, 1, _, 1, _, 1, _, 7, 1, _, 6, _, 1, 4, 1, _, 7, _, 1, _, _, _, _, 1, _, 7],
     [1, _, 1, _, 1, _, _, _, 1, _, _, 1, 8, _, 8, 1, _, 7, _, 4, _, 1, 1, 1, 1, 7, _, 6, 6, _, 1, _, 1],
     [1, _, 1, _, 1, 1, 1, 1, 1, _, _, 1, 8, _, 8, 1, _, 1, _, _, _, _, _, _, _, _, _, 6, 6, _, 1, _, 1],
-    [1, _, 1, _, _, _, _, _, _, _, 1, 1, 8, 8, 8, 6, _, 5, 1, 9, 1, 1, 1, 1, 1, 1, _, _, _, _, 1, _, 1],
+    [1, _, 1, _, _, _, _, _, _, _, 1, 1, 8, 8, 8, 6, _, 5, 1, 9, 1, 1, 1, 1, _, 1, _, _, _, _, 1, _, 1],
     [1, _, 1, 1, 1, 1, 4, 1, 1, _, 6, _, 1, 1, 1, 7, _, _, _, _, _, _, _, _, _, 1, 4, 1, 6, 1, 9, _, 1],
     [1, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 1, 1, _, _, 4, 3, _, _, _, _, _, _, _, _, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1]
@@ -103,7 +105,7 @@ text_map2 = [
     [1, _, 6, _, 5, _, 5, _, 1, 6, _, _, 1, _, 7, 1, _, 6, _, 1, _, 1, _, 7, 1, 1, _, _, _, _, 1, _, 7],
     [1, _, 1, _, 1, _, _, _, 1, 3, _, 1, 8, _, 8, 1, _, 7, _, 4, _, 1, 1, 1, 1, 7, _, 6, 6, _, 1, _, 1],
     [1, _, 1, _, 1, _, 1, 1, 1, _, _, 1, 8, _, 8, 1, _, 1, _, _, _, _, _, _, _, _, _, 6, 6, _, 1, _, 1],
-    [1, _, 1, _, _, _, 1, _, _, _, 7, 1, 8, 8, 8, 6, _, 5, 1, 9, 1, 1, 1, 1, 1, 1, _, _, _, _, 1, _, 1],
+    [1, _, 1, _, _, _, 1, _, _, _, 7, 1, 8, 8, 8, 6, _, 5, 1, 9, 1, 1, 1, 1, _, 1, _, _, _, _, 1, _, 1],
     [1, _, 1, 1, 9, 1, 4, _, 1, _, _, _, 1, 1, 1, 7, _, _, _, _, _, _, _, _, _, 1, 4, 1, 6, 1, 9, _, 1],
     [1, _, _, _, _, _, _, _, 9, 1, 1, _, _, _, _, _, _, _, 1, 1, _, _, 4, 3, _, _, _, _, _, _, _, _, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1]
@@ -139,13 +141,43 @@ for j, row in enumerate(text_map):
             elif char == 9:
                 world_map[(i * TILE, j * TILE)] = 9
 
+WORLD_WIDTH = len(text_map[0]) * TILE
+WORLD_HEIGHT = len(text_map[0]) * TILE
+world_map2 = {}
+mini_map2 = set()
+walls2 = []
+for j, row in enumerate(text_map2):
+    for i, char in enumerate(row):
+        if char:
+            mini_map2.add((i * MAP_TILE, j * MAP_TILE))
+            walls2.append(pygame.Rect(i * TILE, j * TILE, TILE, TILE))
+            if char == 1:
+                world_map2[(i * TILE, j * TILE)] = 1
+            elif char == 2:
+                world_map2[(i * TILE, j * TILE)] = 2
+            elif char == 3:
+                world_map2[(i * TILE, j * TILE)] = 3
+            elif char == 4:
+                world_map2[(i * TILE, j * TILE)] = 4
+            elif char == 5:
+                world_map2[(i * TILE, j * TILE)] = 5
+            elif char == 6:
+                world_map2[(i * TILE, j * TILE)] = 6
+            elif char == 7:
+                world_map2[(i * TILE, j * TILE)] = 7
+            elif char == 8:
+                world_map2[(i * TILE, j * TILE)] = 8
+            elif char == 9:
+                world_map2[(i * TILE, j * TILE)] = 9
+
 
 def mapping(a, b):
     return (a // TILE) * TILE, (b // TILE) * TILE
 
 
 class Player:
-    def __init__(self):
+    def __init__(self, walls):
+        self.walls = walls
         self.x, self.y = player_pos
         self.angle = player_angle
         self.side = 50
@@ -158,13 +190,13 @@ class Player:
     def st(self, dx, dy):
         next_r = self.rect1.copy()
         next_r.move_ip(dx, dy)
-        hit = next_r.collidelistall(walls1)
+        hit = next_r.collidelistall(self.walls)
 
         if len(hit):
             del_x = 0
             del_y = 0
             for i in hit:
-                rect2 = walls1[i]
+                rect2 = self.walls[i]
                 if dx > 0:
                     del_x += next_r.right - rect2.left
                 else:
@@ -251,7 +283,7 @@ class Drawing:
                 _, object, object_pos = obj
                 self.sc.blit(object, object_pos)
 
-    def ray_casting(self, player_pos, player_angle):
+    def ray_casting(self, player_pos, player_angle, world_map):
         val = []
         texture_v = 1
         texture_h = 1
@@ -331,7 +363,7 @@ class Drawing:
         rend = myfont.render(d_life, 0, (0, 150, 0))
         self.sc.blit(rend, LIFE_POS)
 
-    def mini_map(self, player):
+    def mini_map(self, player, mini_map, money_pos):
         global A
         global ANGLE
         g = 1.15
@@ -344,15 +376,15 @@ class Drawing:
         for x, y in mini_map:
             pygame.draw.rect(self.sc_map, (50, 0, 0), ((x * 1.15), y * 1.15, MAP_TILE, MAP_TILE))
         s = ((int(map_x) - 5) // 8, (int(map_y) - 5) // 8)
-        if s in MOMEY_MINI:
+        if s in money_pos:
             pygame.mixer.music.load('data/coin.mp3')
             pygame.mixer.Channel(1).play(pygame.mixer.Sound('data/coin.mp3'))
             pygame.mixer.Channel(1).set_volume(0.3)
-            d = MOMEY_MINI.index(s)
-            del MOMEY_MINI[d]
+            d = money_pos.index(s)
+            del money_pos[d]
             A += 1
 
-        for i in MOMEY_MINI:
+        for i in money_pos:
             coin_rect = new_money.get_rect(center=(i[0] * g * 8 + jk, i[1] * g * 8 + jk))
             new_width = round(math.sin(math.radians(ANGLE)) * coin_rect.width)
             ANGLE += 1
@@ -392,6 +424,9 @@ class SpriteObject:
         self.scale = scale
 
     def object_locate(self, player, walls):
+        fake_walls0 = [walls[0] for i in range(FAKE_RAYS)]
+        fake_walls1 = [walls[-1] for i in range(FAKE_RAYS)]
+        fake_walls = fake_walls0 + walls + fake_walls1
 
         if not self.static:
             return (False,)
@@ -408,7 +443,8 @@ class SpriteObject:
         current_ray = CENTER_RAY + delta_rays
         distance_to_sprite *= math.cos(HALF_FOV - current_ray * DELTA_ANGLE)
 
-        if 0 <= current_ray <= NUM_RAYS - 1 and distance_to_sprite < walls[current_ray][0]:
+        fake_ray = current_ray + FAKE_RAYS
+        if 0 <= fake_ray <= NUM_RAYS - 1 + 2 * FAKE_RAYS and distance_to_sprite < fake_walls[fake_ray][0]:
             proj_height = min(int(PROJ_COEFF / distance_to_sprite * self.scale), 2 * HEIGHT)
             proj_height = max(proj_height, 0.00001)
             half_proj_height = proj_height // 2
@@ -457,7 +493,9 @@ def main():
     sc_map = pygame.Surface(MINIMAP_RES)
     clock = pygame.time.Clock()
     sprites = Sprites(list_of_objects)
-    player = Player()
+    sprites2 = Sprites(list_of_objects)
+    player = Player(walls1)
+    player2 = Player(walls2)
     drawing = Drawing(sc, sc_map)
     interaction = Interaction(player, sprites, drawing)
     pygame.mixer.init()
@@ -485,7 +523,12 @@ def main():
     FLAG_3 = False
     FLAG_4 = False
     FLAG_5 = False
+    FLAG_6 = False
+    FLAG_7 = False
+    FLAG_8 = False
     global A
+    global LVL
+    k = 1
     x, y = 0, 0
 
     while True:
@@ -570,7 +613,6 @@ def main():
                 if event.type == pygame.QUIT:
                     exit()
 
-
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
@@ -590,9 +632,11 @@ def main():
                     x, y = event.pos
                     # print(x, y)
                     if x <= 678 and x >= 523 and y <= 418 and y >= 275:
-                        FLAG_1 = False
                         FLAG_3 = False
-                        FLAG_4 = True
+                        if user_text != '':
+                            FLAG_4 = True
+                        else:
+                            FLAG_1 = True
                     if x <= 1187 and x >= 1068 and y <= 124 and y >= 8:
                         FLAG_2 = True
                         FLAG_3 = False
@@ -656,6 +700,26 @@ def main():
                             user_text += 'y'
                         if event.key == pygame.K_z:
                             user_text += 'z'
+                        if event.key == pygame.K_KP0:
+                            user_text += '0'
+                        if event.key == pygame.K_KP1:
+                            user_text += '1'
+                        if event.key == pygame.K_KP2:
+                            user_text += '2'
+                        if event.key == pygame.K_KP3:
+                            user_text += '3'
+                        if event.key == pygame.K_KP4:
+                            user_text += '4'
+                        if event.key == pygame.K_KP5:
+                            user_text += '5'
+                        if event.key == pygame.K_KP6:
+                            user_text += '6'
+                        if event.key == pygame.K_KP7:
+                            user_text += '7'
+                        if event.key == pygame.K_KP8:
+                            user_text += '8'
+                        if event.key == pygame.K_KP9:
+                            user_text += '9'
 
             d_name = f'Введите своё имя'
             myfont = pygame.font.Font("data/shrift.ttf", 50)
@@ -669,7 +733,6 @@ def main():
             pygame.display.flip()
 
         if FLAG_4:
-
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -698,11 +761,11 @@ def main():
             y_new = int(player.y / TILE)
 
             drawing.background()
-            walls = drawing.ray_casting((int(player.x), int(player.y)), player.angle)
+            walls = drawing.ray_casting((int(player.x), int(player.y)), player.angle, world_map)
             drawing.world(walls + [obj.object_locate(player, walls) for obj in sprites.list_of_objects if obj != 1])
             drawing.fps(clock)
             drawing.time()
-            drawing.mini_map(player)
+            drawing.mini_map(player, mini_map, MOMEY_MINI)
             interaction.npc_move(sprites.list_of_objects[0], walls)
 
             drawing.life()
@@ -718,6 +781,8 @@ def main():
             if x_new == 13 and y_new == 14 and A == 11:
                 FLAG_4 = False
                 FLAG_5 = True
+                A = 0
+                LVL = 2
 
         if FLAG_5:
             sc.fill((0, 0, 0))
@@ -742,7 +807,127 @@ def main():
                 if event.type == pygame.MOUSEMOTION:
                     sc.blit(image, event.pos)
                     x, y = event.pos
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if k == 1:
+                        FLAG_5 = False
+                        FLAG_6 = True
+                        k += 1
+                    else:
+                        FLAG_5 = False
+                        FLAG_8 = True
+            st_text = f.render('ВЫ ВЫЖИЛИ', 0, (0, 0, 255))
+            sc.blit(st_text, (245, 320))
+            if x != 0 and y != 0:
+                sc.blit(image, (x, y))
+            pygame.display.flip()
+
+        if FLAG_6:
+            sc.fill((0, 0, 0))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                if vol < 0:
+                    vol = 0.0
+                if vol > 1:
+                    vol = 1.0
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit()
+                    if event.key == pygame.K_DOWN:
+                        vol -= 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                    if event.key == pygame.K_UP:
+                        vol += 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                if event.type == pygame.MOUSEMOTION:
+                    sc.blit(image, event.pos)
+                    x, y = event.pos
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    FLAG_6 = False
+                    FLAG_7 = True
             st_text = f.render('LEVAL 2', 0, (255, 0, 0))
+            sc.blit(st_text, (380, 330))
+            if x != 0 and y != 0:
+                sc.blit(image, (x, y))
+
+            pygame.display.flip()
+
+        if FLAG_7:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+
+                if vol < 0:
+                    vol = 0.0
+                if vol > 1:
+                    vol = 1.0
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_DOWN:
+                        vol -= 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                    if event.key == pygame.K_UP:
+                        vol += 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+
+            player2.movement()
+            sc.fill((0, 0, 0))
+
+            # print(player.pos()[0] / TILE, player.pos()[1] / TILE)
+
+            x_new = int(player2.x / TILE)
+            y_new = int(player2.y / TILE)
+
+            drawing.background()
+            walls = drawing.ray_casting((int(player2.x), int(player2.y)), player2.angle, world_map2)
+            drawing.world(walls + [obj.object_locate(player2, walls) for obj in sprites2.list_of_objects if obj != 1])
+            drawing.fps(clock)
+            drawing.time()
+            drawing.mini_map(player2, mini_map2, MOMEY_MINI2)
+            interaction.npc_move(sprites.list_of_objects[0], walls)
+
+            drawing.life()
+            clock.tick(60)
+
+            pygame.display.flip()
+            clock.tick()
+
+            if (x_new, y_new) in posis:
+                s = posis.index((x_new, y_new))
+                sprites2.list_of_objects[s] = 1
+
+            if x_new == 13 and y_new == 14 and A == 11:
+                FLAG_7 = False
+                FLAG_5 = True
+                A = 0
+
+        if FLAG_8:
+            sc.fill((0, 0, 0))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                if vol < 0:
+                    vol = 0.0
+                if vol > 1:
+                    vol = 1.0
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit()
+                    if event.key == pygame.K_DOWN:
+                        vol -= 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                    if event.key == pygame.K_UP:
+                        vol += 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                if event.type == pygame.MOUSEMOTION:
+                    sc.blit(image, event.pos)
+                    x, y = event.pos
+            st_text = f.render('КОНЕЦ', 0, (255, 0, 0))
             sc.blit(st_text, (380, 330))
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
