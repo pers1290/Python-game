@@ -453,6 +453,7 @@ def main():
 
     pygame.init()
     sc = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption('DARK MAZE')
     sc_map = pygame.Surface(MINIMAP_RES)
     clock = pygame.time.Clock()
     sprites = Sprites(list_of_objects)
