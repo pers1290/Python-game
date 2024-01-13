@@ -64,7 +64,7 @@ starttime = 0
 def player_speed():
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LSHIFT]:
-        return 20
+        return 7
     else:
         return 5
 
