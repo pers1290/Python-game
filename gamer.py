@@ -1,10 +1,8 @@
 import pygame
 import math
-import copy
-import datetime
+
 import sqlite3
-import time
-import functools
+
 
 # игровые настройки
 WIDTH = 1200
