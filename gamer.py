@@ -55,7 +55,7 @@ MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20
               (29, 15), (30, 6)]
 MOMEY_MINI2 = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
                (29, 15), (30, 6)]
-A = 0
+A = 10
 ANGLE = 0
 LVL = 1
 starttime = 0
@@ -64,7 +64,7 @@ starttime = 0
 def player_speed():
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LSHIFT]:
-        return 7
+        return 10
     else:
         return 5
 
@@ -679,7 +679,8 @@ def main():
                                 FLAG_4 = True
                             else:
                                 with con:
-                                    cur.execute(f'''INSERT INTO game_db(name) VALUES('{user_text}')''')
+                                    cur.execute(f'''INSERT INTO game_db(name, lvl1, lvl2)
+                                     VALUES('{user_text}', 0, 0)''')
                                 starttime = pygame.time.get_ticks() // 1000
                                 FLAG_4 = True
                             con.close()
@@ -835,11 +836,27 @@ def main():
                 minut = 0
                 FLAG_5 = True
                 timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
-                A = 0
+                A = 10
                 LVL = 2
 
         if FLAG_5:
             sc.fill((0, 0, 0))
+            a = 'game.db'
+            con = sqlite3.connect(a)
+            cur = con.cursor()
+            result = cur.execute(f"""SELECT lvl1 FROM game_db
+                        WHERE name = '{user_text}'""").fetchall()
+            if result[0][0] == 0:
+                with con:
+                    cur.execute(f'''UPDATE game_db
+                    SET lvl1 = {timelvl1}
+                    WHERE name = "{user_text}"''')
+            if result[0][0] > timelvl1:
+                with con:
+                    cur.execute(f'''UPDATE game_db
+                    SET lvl1 = {timelvl1}
+                    WHERE name = "{user_text}"''')
+            con.close()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
@@ -963,10 +980,26 @@ def main():
                 minut = 0
                 FLAG_8 = True
                 timelvl2 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
-                A = 0
+                A = 10
 
         if FLAG_8:
             sc.fill((0, 0, 0))
+            a = 'game.db'
+            con = sqlite3.connect(a)
+            cur = con.cursor()
+            result = cur.execute(f"""SELECT lvl2 FROM game_db
+                        WHERE name = '{user_text}'""").fetchall()
+            if result[0][0] == 0:
+                with con:
+                    cur.execute(f'''UPDATE game_db
+                    SET lvl2 = {timelvl2}
+                    WHERE name = "{user_text}"''')
+            if result[0][0] > timelvl2:
+                with con:
+                    cur.execute(f'''UPDATE game_db
+                    SET lvl2 = {timelvl2}
+                    WHERE name = "{user_text}"''')
+            con.close()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
