@@ -464,16 +464,44 @@ class SpriteObject:
 
 
 class Interaction:
-    def __init__(self, player, sprites, drawing):
+    def __init__(self, player, sprites, drawing, walls, obj):
         self.player = player
         self.sprites = sprites
         self.drawing = drawing
+        self.walls = walls
+        self.obj = obj
+        self.side = 20
+        self.rect_sirenhead = pygame.Rect(self.obj.x, self.obj.y, 20, 20)
 
-    def npc_move(self, obj, walls):
-        dx = obj.x - self.player.pos[0]
-        dy = obj.y - self.player.pos[1]
-        obj.x = obj.x + 2 if dx < 0 else obj.x - 2
-        obj.y = obj.y + 2 if dy < 0 else obj.y - 2
+    def detect_collision(self, dx, dy):
+        if dx != 0:
+            delta_x = (self.side // 2) * abs(dx) / dx
+            if mapping(self.obj.x + dx + delta_x, self.obj.y + delta_x) in world_map:
+                dx = 0
+            if mapping(self.obj.x + dx + delta_x, self.obj.y - delta_x) in world_map:
+                dx = 0
+        if dy != 0:
+            delta_y = (self.side // 2) * abs(dy) / dy
+            if mapping(self.obj.x + delta_y, self.obj.y + dy + delta_y) in world_map:
+                dy = 0
+            if mapping(self.obj.x - delta_y, self.obj.y + dy + delta_y) in world_map:
+                dy = 0
+        self.obj.x += dx
+        self.obj.y += dy
+
+    def npc_move(self):
+        dx = self.obj.x - self.player.pos[0]
+        dy = self.obj.y - self.player.pos[1]
+        if dx < 0:
+            xx = 2
+        else:
+            xx = -2
+        if dy < 0:
+            yy = 2
+        else:
+            yy = -2
+        self.detect_collision(xx, yy)
+        return (self.obj.x, self.obj.y)
 
 
 def main():
@@ -503,7 +531,7 @@ def main():
     player = Player(walls1)
     player2 = Player(walls2)
     drawing = Drawing(sc, sc_map)
-    interaction = Interaction(player, sprites, drawing)
+    interaction = Interaction(player, sprites, drawing, walls1, sprites.list_of_objects[0])
     pygame.mixer.init()
     pygame.font.init()
     f = pygame.font.Font("data/shrift.ttf", 130)
@@ -790,7 +818,7 @@ def main():
             drawing.fps(clock)
             drawing.time()
             drawing.mini_map(player, mini_map, MOMEY_MINI)
-            interaction.npc_move(sprites.list_of_objects[0], walls)
+            print(interaction.npc_move())
 
             drawing.life()
             clock.tick(60)
