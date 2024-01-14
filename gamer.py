@@ -3,10 +3,8 @@ import math
 import copy
 import datetime
 import sqlite3
-import schedule
 import time
 import functools
-
 
 # игровые настройки
 WIDTH = 1200
@@ -59,6 +57,7 @@ A = 0
 ANGLE = 0
 LVL = 1
 starttime = 0
+g = 0
 
 
 def player_speed():
@@ -349,7 +348,6 @@ class Drawing:
         rend = self.font.render(d_fps, 0, (0, 150, 0))
         self.sc.blit(rend, FPS_POS)
 
-
     def time(self):
         time = int((pygame.time.get_ticks() // 1000)) - int(starttime)
         minut = 0
@@ -522,6 +520,24 @@ def main():
     image = pygame.transform.scale(image, (25, 25))
     pygame.mixer.Channel(0).set_volume(vol)
     pygame.mouse.set_visible(False)
+    star = pygame.image.load('data/star.png').convert_alpha()
+    star2 = pygame.image.load('data/star2.png').convert_alpha()
+    star_01 = pygame.transform.scale(star, (50, 50))
+    star_02 = pygame.transform.scale(star2, (50, 50))
+    star_03 = pygame.transform.scale(star, (23, 23))
+    drav2 = False
+    true = True
+    sd = [(410, 550), (480, 550), (550, 550), (620, 550), (690, 550)]
+    fh = [(110, 12), (140, 12), (170, 12), (200, 12), (230, 12)]
+    with open('star.txt', 'r', encoding="utf-8") as d:
+        fd = ''.join(d.readlines())
+        if len(fd) > 0:
+            fg = []
+            for z in fd:
+                fg.append(int(z))
+            df = round(sum(fg) / len(fg))
+        else:
+            df = 0
     # pygame.mixer.Channel(2).set_volume(0.5)
 
     FLAG_1 = True
@@ -534,6 +550,8 @@ def main():
     FLAG_8 = False
     FLAG_9 = False
     global A
+    global LVL
+    global g
     global starttime
     k = 1
     x, y = 0, 0
@@ -742,6 +760,26 @@ def main():
                         if event.key == pygame.K_KP8:
                             user_text += '8'
                         if event.key == pygame.K_KP9:
+                            user_text += '9'
+                        if event.key == pygame.K_0:
+                            user_text += '0'
+                        if event.key == pygame.K_1:
+                            user_text += '1'
+                        if event.key == pygame.K_2:
+                            user_text += '2'
+                        if event.key == pygame.K_3:
+                            user_text += '3'
+                        if event.key == pygame.K_4:
+                            user_text += '4'
+                        if event.key == pygame.K_5:
+                            user_text += '5'
+                        if event.key == pygame.K_6:
+                            user_text += '6'
+                        if event.key == pygame.K_7:
+                            user_text += '7'
+                        if event.key == pygame.K_8:
+                            user_text += '8'
+                        if event.key == pygame.K_9:
                             user_text += '9'
 
             d_name = f'Введите своё имя'
@@ -1047,12 +1085,15 @@ def main():
 
             pygame.display.flip()
 
-
-
         if FLAG_9:
             sc.fill((0, 0, 0))
+            for i in sd:
+                sc.blit(star_02, i)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    with open('star.txt', 'a', encoding="utf-8") as f:
+                        if g > 0:
+                            f.write(f'{str(g)}')
                     exit()
                 if vol < 0:
                     vol = 0.0
@@ -1060,6 +1101,9 @@ def main():
                     vol = 1.0
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        with open('star.txt', 'a', encoding="utf-8") as f:
+                            if g > 0:
+                                f.write(f'{str(g)}')
                         exit()
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
@@ -1072,14 +1116,48 @@ def main():
                 if event.type == pygame.MOUSEMOTION:
                     sc.blit(image, event.pos)
                     x, y = event.pos
+                    if true:
+                        if x <= 460 and x >= 410 and y <= 600 and y >= 550:
+                            g = 1
+                            drav2 = True
+                        elif x <= 530 and x >= 410 and y <= 600 and y >= 550:
+                            g = 2
+                            drav2 = True
+                        elif x <= 600 and x >= 410 and y <= 600 and y >= 550:
+                            g = 3
+                            drav2 = True
+                        elif x <= 670 and x >= 410 and y <= 600 and y >= 550:
+                            g = 4
+                            drav2 = True
+                        elif x <= 740 and x >= 410 and y <= 600 and y >= 550:
+                            g = 5
+                            drav2 = True
+                        else:
+                            g = 0
+                            drav2 = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if x <= 750 and x >= 420 and y <= 600 and y >= 550:
+                        true = False
+            if drav2:
+                for j in sd[:g]:
+                    sc.blit(star_01, j)
+
             st_text = f.render('КОНЕЦ', 0, (255, 0, 0))
-            sc.blit(st_text, (380, 330))
+            sc.blit(st_text, (390, 300))
             d_time = f'поддержка автора: 89645211748(тинькофф)'
             myfont = pygame.font.Font("data/shrift.ttf", 24)
+            stars = pygame.font.Font("data/shrift.ttf", 24)
+            ret = pygame.font.Font("data/shrift.ttf", 24)
+            r = ret.render(f'рейтинг', 0, (0, 150, 0))
+            st = stars.render('как вам игра?', 0, (0, 150, 0))
             rend = myfont.render(d_time, 0, (0, 150, 0))
-            sc.blit(rend, (350, 500))
+            sc.blit(rend, (350, 440))
+            sc.blit(st, (500, 490))
+            sc.blit(r, (10, 10))
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
+            for o in fh[:df]:
+                sc.blit(star_03, o)
 
             pygame.display.flip()
 
