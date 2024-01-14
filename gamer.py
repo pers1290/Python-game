@@ -55,7 +55,7 @@ MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20
               (29, 15), (30, 6)]
 MOMEY_MINI2 = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
                (29, 15), (30, 6)]
-A = 10
+A = 0
 ANGLE = 0
 LVL = 1
 starttime = 0
@@ -680,7 +680,7 @@ def main():
                             else:
                                 with con:
                                     cur.execute(f'''INSERT INTO game_db(name, lvl1, lvl2)
-                                     VALUES('{user_text}', 0, 0)''')
+                                     VALUES('{user_text}', '', '')''')
                                 starttime = pygame.time.get_ticks() // 1000
                                 FLAG_4 = True
                             con.close()
@@ -834,9 +834,10 @@ def main():
             if x_new == 13 and y_new == 14 and A == 11:
                 FLAG_4 = False
                 minut = 0
+                bestminut = 0
                 FLAG_5 = True
                 timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
-                A = 10
+                A = 0
                 LVL = 2
 
         if FLAG_5:
@@ -846,16 +847,25 @@ def main():
             cur = con.cursor()
             result = cur.execute(f"""SELECT lvl1 FROM game_db
                         WHERE name = '{user_text}'""").fetchall()
-            if result[0][0] == 0:
+            if result[0][0] == '':
                 with con:
                     cur.execute(f'''UPDATE game_db
                     SET lvl1 = {timelvl1}
                     WHERE name = "{user_text}"''')
-            if result[0][0] > timelvl1:
+            elif result[0][0] > timelvl1:
                 with con:
                     cur.execute(f'''UPDATE game_db
                     SET lvl1 = {timelvl1}
                     WHERE name = "{user_text}"''')
+
+            result1 = cur.execute(f"""SELECT lvl1 FROM game_db""").fetchall()
+            sp = []
+            for element in result1:
+                if element[0] != '':
+                    sp.append(element[0])
+            best = min(sp)
+            bestname = cur.execute(f"""SELECT name FROM game_db WHERE lvl1 = {best}""").fetchall()
+            # print(best, bestname[0][0])
             con.close()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -887,10 +897,20 @@ def main():
                 timelvl1 = int(timelvl1) - 60
                 if int(timelvl1) < 10:
                     timelvl1 = f'0{timelvl1}'
+            while int(best) >= 60:
+                bestminut += 1
+                best = int(best) - 60
+
             d_time = f'Время прохождения: {minut} мин {timelvl1} сек'
             myfont = pygame.font.Font("data/shrift.ttf", 24)
-            rend = myfont.render(d_time, 0, (0, 150, 0))
-            sc.blit(rend, (450, 500))
+            rend = myfont.render(d_time, 0, (255, 0, 0))
+            sc.blit(rend, (430, 500))
+            d_besttime = f'Лучший результат:'
+            d_besttime1 = f'{bestname[0][0]} {bestminut} мин {best} сек'
+            rend1 = myfont.render(d_besttime, 0, (0, 150, 0))
+            rend2 = myfont.render(d_besttime1, 0, (0, 150, 0))
+            sc.blit(rend1, (500, 550))
+            sc.blit(rend2, (520, 600))
             st_text = f.render('ВЫ ПРОШЛИ 1 LVL', 0, (255, 0, 0))
             sc.blit(st_text, (100, 320))
             if x != 0 and y != 0:
@@ -980,7 +1000,7 @@ def main():
                 minut = 0
                 FLAG_8 = True
                 timelvl2 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
-                A = 10
+                A = 0
 
         if FLAG_8:
             sc.fill((0, 0, 0))
@@ -989,16 +1009,25 @@ def main():
             cur = con.cursor()
             result = cur.execute(f"""SELECT lvl2 FROM game_db
                         WHERE name = '{user_text}'""").fetchall()
-            if result[0][0] == 0:
+            if result[0][0] == '':
                 with con:
                     cur.execute(f'''UPDATE game_db
                     SET lvl2 = {timelvl2}
                     WHERE name = "{user_text}"''')
-            if result[0][0] > timelvl2:
+            elif result[0][0] > timelvl2:
                 with con:
                     cur.execute(f'''UPDATE game_db
                     SET lvl2 = {timelvl2}
                     WHERE name = "{user_text}"''')
+
+            result1 = cur.execute(f"""SELECT lvl2 FROM game_db""").fetchall()
+            sp = []
+            for element in result1:
+                if element[0] != '':
+                    sp.append(element[0])
+            best = min(sp)
+            bestname = cur.execute(f"""SELECT name FROM game_db WHERE lvl2 = {best}""").fetchall()
+            # print(best, bestname[0][0])
             con.close()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -1033,6 +1062,12 @@ def main():
             myfont = pygame.font.Font("data/shrift.ttf", 24)
             rend = myfont.render(d_time, 0, (0, 150, 0))
             sc.blit(rend, (450, 500))
+            d_besttime = f'Лучший результат:'
+            d_besttime1 = f'{bestname[0][0]} {bestminut} мин {best} сек'
+            rend1 = myfont.render(d_besttime, 0, (0, 150, 0))
+            rend2 = myfont.render(d_besttime1, 0, (0, 150, 0))
+            sc.blit(rend1, (500, 550))
+            sc.blit(rend2, (520, 600))
             st_text = f.render('ВЫ ПРОШЛИ 2 LVL', 0, (255, 0, 0))
             sc.blit(st_text, (100, 330))
             if x != 0 and y != 0:
