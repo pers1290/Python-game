@@ -411,7 +411,7 @@ class Sprites:
         self.sprite_types = {'money': pygame.image.load('data/coi.png').convert_alpha(),
                              'sirenhead': pygame.image.load('data/lol.png').convert_alpha()}
 
-        self.list_of_objects = [SpriteObject(self.sprite_types['sirenhead'], True, (13.80, 11), 0.5, 0.8)]
+        self.list_of_objects = [SpriteObject(self.sprite_types['sirenhead'], True, (13.50, 11.50), 0.5, 0.8)]
         for i in self.sprite:
             if i != '1':
                 self.list_of_objects.append(SpriteObject(self.sprite_types[i[0]], i[1], i[2], i[3], i[4]))
@@ -485,20 +485,44 @@ class Interaction:
         self.obj.x += dx
         self.obj.y += dy
 
-    def npc_move(self):
-        dx = self.obj.x - self.player.pos[0]
-        dy = self.obj.y - self.player.pos[1]
-        if dx < 0:
-            xx = 2
-        else:
-            xx = -2
-        if dy < 0:
-            yy = 2
-        else:
-            yy = -2
-        self.detect_collision(xx, yy)
-        return (self.obj.x, self.obj.y)
+    def find_path_step(self, start, target):
+        height = len(text_map)
+        width = len(text_map[0])
+        INF = 1000
+        x, y = start
+        distance = [[INF] * width for _ in range(height)]
+        distance[y][x] = 0
+        prev = [[None] * width for _ in range(height)]
+        queue = [(x, y)]
+        while queue:
+            x, y = queue.pop(0)
+            for dx, dy in (0, 1), (1, 0), (-1, 0), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1):
+                next_x, next_y = x + dx, y + dy
+                if 0 <= next_x < width and 0 < next_y < height and not text_map[next_y][next_x] and distance[next_y][next_x] == INF:
+                    distance[next_y][next_x] = distance[y][x] + 1
+                    prev[next_y][next_x] = (x, y)
+                    queue.append((next_x, next_y))
+        x, y = target
+        if distance[y][x] == INF or start == target:
+            return (start[0] * 100 + 50, start[1] * 100 + 50)
+        while prev[y][x] != start:
+            x, y = prev[y][x]
+        return x * 100 + 50, y * 100 + 50
 
+
+
+    def npc_move(self):
+        self.obj.x, self.obj.y = self.find_path_step((round(self.obj.x // 100), round(self.obj.y // 100)), (round(self.player.x // 100), round(self.player.y // 100)))
+
+    def move(self, x, y):
+        if x > self.obj.x:
+            self.obj.x += 4
+        elif x < self.obj.x:
+            self.obj.x -= 4
+        if x > self.obj.y:
+            self.obj.y += 4
+        elif x < self.obj.y:
+            self.obj.y -= 4
 
 def main():
     list_of_objects = [
@@ -528,6 +552,9 @@ def main():
     player2 = Player(walls2)
     drawing = Drawing(sc, sc_map)
     interaction = Interaction(player, sprites, drawing, walls1, sprites.list_of_objects[0])
+    ENEMY_EVENT_TYPE = 30
+    delay = 1000
+    pygame.time.set_timer(ENEMY_EVENT_TYPE, delay)
     pygame.mixer.init()
     pygame.font.init()
     f = pygame.font.Font("data/shrift.ttf", 130)
@@ -823,10 +850,10 @@ def main():
         if FLAG_4:
             # per = schedule.every(1).seconds.do(time)
             # schedule.cancel_job(per)
+            next_pos = sprites.list_of_objects[0].pas
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
-
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
@@ -840,6 +867,10 @@ def main():
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
                         # print(pygame.mixer.music.get_volume())
+                elif event.type == ENEMY_EVENT_TYPE:
+                    interaction.npc_move()
+
+            #interaction.move(next_pos[0], next_pos[1])
 
             player.movement()
             sc.fill((0, 0, 0))
@@ -855,10 +886,10 @@ def main():
             drawing.fps(clock)
             drawing.time()
             drawing.mini_map(player, mini_map, MOMEY_MINI)
-            print(interaction.npc_move())
+            print(player.pos)
 
             drawing.life()
-            clock.tick(60)
+            clock.tick(80)
 
             pygame.display.flip()
             clock.tick()
