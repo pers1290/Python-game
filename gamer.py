@@ -496,7 +496,7 @@ class Interaction:
         queue = [(x, y)]
         while queue:
             x, y = queue.pop(0)
-            for dx, dy in (0, 1), (1, 0), (-1, 0), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1):
+            for dx, dy in (0, 1), (1, 0), (-1, 0), (0, -1):
                 next_x, next_y = x + dx, y + dy
                 if 0 <= next_x < width and 0 < next_y < height and not text_map[next_y][next_x] and distance[next_y][next_x] == INF:
                     distance[next_y][next_x] = distance[y][x] + 1
@@ -512,7 +512,7 @@ class Interaction:
 
 
     def npc_move(self):
-        self.obj.x, self.obj.y = self.find_path_step((round(self.obj.x // 100), round(self.obj.y // 100)), (round(self.player.x // 100), round(self.player.y // 100)))
+        return self.find_path_step((round(self.obj.x // 100), round(self.obj.y // 100)), (round(self.player.x // 100), round(self.player.y // 100)))
 
     def move(self, x, y):
         if x > self.obj.x:
@@ -553,8 +553,9 @@ def main():
     drawing = Drawing(sc, sc_map)
     interaction = Interaction(player, sprites, drawing, walls1, sprites.list_of_objects[0])
     ENEMY_EVENT_TYPE = 30
-    delay = 1000
+    delay = 50
     pygame.time.set_timer(ENEMY_EVENT_TYPE, delay)
+    next_pos = sprites.list_of_objects[0].pas
     pygame.mixer.init()
     pygame.font.init()
     f = pygame.font.Font("data/shrift.ttf", 130)
@@ -850,7 +851,6 @@ def main():
         if FLAG_4:
             # per = schedule.every(1).seconds.do(time)
             # schedule.cancel_job(per)
-            next_pos = sprites.list_of_objects[0].pas
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
@@ -867,10 +867,22 @@ def main():
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
                         # print(pygame.mixer.music.get_volume())
-                elif event.type == ENEMY_EVENT_TYPE:
-                    interaction.npc_move()
 
-            #interaction.move(next_pos[0], next_pos[1])
+                elif event.type == ENEMY_EVENT_TYPE:
+                    next_pos = interaction.npc_move()
+
+            if (sprites.list_of_objects[0].x, sprites.list_of_objects[0].y) != next_pos:
+                if next_pos[0] > sprites.list_of_objects[0].x:
+                    sprites.list_of_objects[0].x += 6
+                elif next_pos[0] < sprites.list_of_objects[0].x:
+                    sprites.list_of_objects[0].x -= 6
+                else:
+                    pass
+                if next_pos[1] > sprites.list_of_objects[0].y:
+                    sprites.list_of_objects[0].y += 6
+                elif next_pos[1] < sprites.list_of_objects[0].y:
+                    sprites.list_of_objects[0].y -= 6
+
 
             player.movement()
             sc.fill((0, 0, 0))
@@ -886,7 +898,6 @@ def main():
             drawing.fps(clock)
             drawing.time()
             drawing.mini_map(player, mini_map, MOMEY_MINI)
-            print(player.pos)
 
             drawing.life()
             clock.tick(80)
