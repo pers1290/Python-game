@@ -912,7 +912,7 @@ def main():
                 s = posis.index((x_new, y_new))
                 sprites.list_of_objects[s] = 1
 
-            if x_new == 13 and y_new == 14 and A == 1:
+            if x_new == 13 and y_new == 14 and A == 11:
                 FLAG_4 = False
                 minut = 0
                 bestminut = 0
