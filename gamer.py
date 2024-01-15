@@ -1046,7 +1046,6 @@ def main():
                 elif event.type == ENEMY_EVENT_TYPE:
                     next_pos_2 = interaction_2.npc_move()
                     next_pos2_2 = interaction2_2.npc_move()
-                    print(next_pos_2, next_pos2_2)
 
             if (sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y) != next_pos_2:
                 if next_pos_2[0] > sprites2.list_of_objects[0].x:
@@ -1059,8 +1058,6 @@ def main():
                     sprites2.list_of_objects[0].y += 5
                 elif next_pos_2[1] < sprites2.list_of_objects[0].y:
                     sprites2.list_of_objects[0].y -= 5
-            else:
-                print(sprites2.list_of_objects[0].x)
 
             if (sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y) != next_pos2_2:
                 if next_pos2_2[0] > sprites2.list_of_objects[-1].x:
@@ -1073,8 +1070,6 @@ def main():
                     sprites2.list_of_objects[-1].y += 5
                 elif next_pos2_2[1] < sprites2.list_of_objects[-1].y:
                     sprites2.list_of_objects[-1].y -= 5
-            else:
-                print(2)
 
             player2.movement()
             sc.fill((0, 0, 0))
