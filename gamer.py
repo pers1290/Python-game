@@ -51,7 +51,7 @@ MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20
               (29, 15), (30, 6)]
 MOMEY_MINI2 = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
                (29, 15), (30, 6)]
-A = 0
+A = 10
 ANGLE = 0
 LVL = 1
 starttime = 0
@@ -915,7 +915,7 @@ def main():
                 bestminut = 0
                 FLAG_5 = True
                 timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
-                A = 0
+                A = 10
                 LVL = 2
 
         if FLAG_5:
@@ -1078,7 +1078,7 @@ def main():
                 minut = 0
                 FLAG_8 = True
                 timelvl2 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
-                A = 0
+                A = 10
 
         if FLAG_8:
             sc.fill((0, 0, 0))
