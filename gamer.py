@@ -415,6 +415,7 @@ class Sprites:
         for i in self.sprite:
             if i != '1':
                 self.list_of_objects.append(SpriteObject(self.sprite_types[i[0]], i[1], i[2], i[3], i[4]))
+        self.list_of_objects.append(SpriteObject(self.sprite_types['sirenhead'], True, (13.50, 12.50), 0.5, 0.8))
 
 
 class SpriteObject:
@@ -460,7 +461,7 @@ class SpriteObject:
 
 
 class Interaction:
-    def __init__(self, player, sprites, drawing, walls, obj):
+    def __init__(self, player, sprites, drawing, walls, obj, text_map):
         self.player = player
         self.sprites = sprites
         self.drawing = drawing
@@ -468,22 +469,7 @@ class Interaction:
         self.obj = obj
         self.side = 20
         self.rect_sirenhead = pygame.Rect(self.obj.x, self.obj.y, 20, 20)
-
-    def detect_collision(self, dx, dy):
-        if dx != 0:
-            delta_x = (self.side // 2) * abs(dx) / dx
-            if mapping(self.obj.x + dx + delta_x, self.obj.y + delta_x) in world_map:
-                dx = 0
-            if mapping(self.obj.x + dx + delta_x, self.obj.y - delta_x) in world_map:
-                dx = 0
-        if dy != 0:
-            delta_y = (self.side // 2) * abs(dy) / dy
-            if mapping(self.obj.x + delta_y, self.obj.y + dy + delta_y) in world_map:
-                dy = 0
-            if mapping(self.obj.x - delta_y, self.obj.y + dy + delta_y) in world_map:
-                dy = 0
-        self.obj.x += dx
-        self.obj.y += dy
+        self.text_map = text_map
 
     def find_path_step(self, start, target):
         height = len(text_map)
@@ -498,7 +484,7 @@ class Interaction:
             x, y = queue.pop(0)
             for dx, dy in (0, 1), (1, 0), (-1, 0), (0, -1):
                 next_x, next_y = x + dx, y + dy
-                if 0 <= next_x < width and 0 < next_y < height and not text_map[next_y][next_x] and distance[next_y][next_x] == INF:
+                if 0 <= next_x < width and 0 < next_y < height and not self.text_map[next_y][next_x] and distance[next_y][next_x] == INF:
                     distance[next_y][next_x] = distance[y][x] + 1
                     prev[next_y][next_x] = (x, y)
                     queue.append((next_x, next_y))
@@ -551,11 +537,13 @@ def main():
     player = Player(walls1)
     player2 = Player(walls2)
     drawing = Drawing(sc, sc_map)
-    interaction = Interaction(player, sprites, drawing, walls1, sprites.list_of_objects[0])
+    interaction = Interaction(player, sprites, drawing, walls1, sprites.list_of_objects[0], text_map)
+    interaction2 = Interaction(player, sprites, drawing, walls1, sprites.list_of_objects[-1], text_map)
+    interaction_2 = Interaction(player2, sprites2, drawing, walls2, sprites.list_of_objects[0], text_map2)
+    interaction2_2 = Interaction(player2, sprites2, drawing, walls2, sprites.list_of_objects[-1], text_map2)
     ENEMY_EVENT_TYPE = 30
     delay = 50
     pygame.time.set_timer(ENEMY_EVENT_TYPE, delay)
-    next_pos = sprites.list_of_objects[0].pas
     pygame.mixer.init()
     pygame.font.init()
     f = pygame.font.Font("data/shrift.ttf", 130)
@@ -849,6 +837,8 @@ def main():
 
 
         if FLAG_4:
+            next_pos = sprites.list_of_objects[0].pas
+            next_pos2 = sprites.list_of_objects[-1].pas
             # per = schedule.every(1).seconds.do(time)
             # schedule.cancel_job(per)
             for event in pygame.event.get():
@@ -870,18 +860,31 @@ def main():
 
                 elif event.type == ENEMY_EVENT_TYPE:
                     next_pos = interaction.npc_move()
+                    next_pos2 = interaction2.npc_move()
 
             if (sprites.list_of_objects[0].x, sprites.list_of_objects[0].y) != next_pos:
                 if next_pos[0] > sprites.list_of_objects[0].x:
-                    sprites.list_of_objects[0].x += 6
+                    sprites.list_of_objects[0].x += 5
                 elif next_pos[0] < sprites.list_of_objects[0].x:
-                    sprites.list_of_objects[0].x -= 6
+                    sprites.list_of_objects[0].x -= 5
                 else:
                     pass
                 if next_pos[1] > sprites.list_of_objects[0].y:
-                    sprites.list_of_objects[0].y += 6
+                    sprites.list_of_objects[0].y += 5
                 elif next_pos[1] < sprites.list_of_objects[0].y:
-                    sprites.list_of_objects[0].y -= 6
+                    sprites.list_of_objects[0].y -= 5
+
+            if (sprites.list_of_objects[-1].x, sprites.list_of_objects[-1].y) != next_pos2:
+                if next_pos2[0] > sprites.list_of_objects[-1].x:
+                    sprites.list_of_objects[-1].x += 5
+                elif next_pos2[0] < sprites.list_of_objects[-1].x:
+                    sprites.list_of_objects[-1].x -= 5
+                else:
+                    pass
+                if next_pos2[1] > sprites.list_of_objects[-1].y:
+                    sprites.list_of_objects[-1].y += 5
+                elif next_pos2[1] < sprites.list_of_objects[-1].y:
+                    sprites.list_of_objects[-1].y -= 5
 
 
             player.movement()
@@ -909,7 +912,7 @@ def main():
                 s = posis.index((x_new, y_new))
                 sprites.list_of_objects[s] = 1
 
-            if x_new == 13 and y_new == 14 and A == 11:
+            if x_new == 13 and y_new == 14 and A == 1:
                 FLAG_4 = False
                 minut = 0
                 bestminut = 0
@@ -930,7 +933,7 @@ def main():
                     cur.execute(f'''UPDATE game_db
                     SET lvl1 = {timelvl1}
                     WHERE name = "{user_text}"''')
-            elif result[0][0] > timelvl1:
+            elif int(result[0][0]) > timelvl1:
                 with con:
                     cur.execute(f'''UPDATE game_db
                     SET lvl1 = {timelvl1}
@@ -1030,6 +1033,10 @@ def main():
             pygame.display.flip()
 
         if FLAG_7:
+            sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y = 1350, 1150
+            sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y = 1350, 1250
+            next_pos_2 = (sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y)
+            next_pos2_2 = (sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
@@ -1048,6 +1055,39 @@ def main():
                         pygame.mixer.Channel(0).set_volume(vol)
                         # print(pygame.mixer.music.get_volume())
 
+                elif event.type == ENEMY_EVENT_TYPE:
+                    next_pos_2 = interaction_2.npc_move()
+                    next_pos2_2 = interaction2_2.npc_move()
+                    print(next_pos, next_pos2)
+
+            if (sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y) != next_pos_2:
+                if next_pos_2[0] > sprites2.list_of_objects[0].x:
+                    sprites2.list_of_objects[0].x += 5
+                elif next_pos_2[0] < sprites2.list_of_objects[0].x:
+                    sprites2.list_of_objects[0].x -= 5
+                else:
+                    pass
+                if next_pos_2[1] > sprites2.list_of_objects[0].y:
+                    sprites2.list_of_objects[0].y += 5
+                elif next_pos_2[1] < sprites2.list_of_objects[0].y:
+                    sprites2.list_of_objects[0].y -= 5
+            else:
+                print(1)
+
+            if (sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y) != next_pos2_2:
+                if next_pos2_2[0] > sprites2.list_of_objects[-1].x:
+                    sprites2.list_of_objects[-1].x += 5
+                elif next_pos2_2[0] < sprites2.list_of_objects[-1].x:
+                    sprites2.list_of_objects[-1].x -= 5
+                else:
+                    pass
+                if next_pos2_2[1] > sprites2.list_of_objects[-1].y:
+                    sprites2.list_of_objects[-1].y += 5
+                elif next_pos2_2[1] < sprites2.list_of_objects[-1].y:
+                    sprites2.list_of_objects[-1].y -= 5
+            else:
+                print(2)
+
             player2.movement()
             sc.fill((0, 0, 0))
 
@@ -1062,7 +1102,6 @@ def main():
             drawing.fps(clock)
             drawing.time()
             drawing.mini_map(player2, mini_map2, MOMEY_MINI2)
-            interaction.npc_move(sprites.list_of_objects[0], walls)
 
             drawing.life()
             clock.tick(60)
