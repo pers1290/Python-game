@@ -472,8 +472,8 @@ class Interaction:
         self.text_map = text_map
 
     def find_path_step(self, start, target):
-        height = len(text_map)
-        width = len(text_map[0])
+        height = len(self.text_map)
+        width = len(self.text_map[0])
         INF = 1000
         x, y = start
         distance = [[INF] * width for _ in range(height)]
@@ -500,15 +500,6 @@ class Interaction:
     def npc_move(self):
         return self.find_path_step((round(self.obj.x // 100), round(self.obj.y // 100)), (round(self.player.x // 100), round(self.player.y // 100)))
 
-    def move(self, x, y):
-        if x > self.obj.x:
-            self.obj.x += 4
-        elif x < self.obj.x:
-            self.obj.x -= 4
-        if x > self.obj.y:
-            self.obj.y += 4
-        elif x < self.obj.y:
-            self.obj.y -= 4
 
 def main():
     list_of_objects = [
@@ -539,10 +530,14 @@ def main():
     drawing = Drawing(sc, sc_map)
     interaction = Interaction(player, sprites, drawing, walls1, sprites.list_of_objects[0], text_map)
     interaction2 = Interaction(player, sprites, drawing, walls1, sprites.list_of_objects[-1], text_map)
-    interaction_2 = Interaction(player2, sprites2, drawing, walls2, sprites.list_of_objects[0], text_map2)
-    interaction2_2 = Interaction(player2, sprites2, drawing, walls2, sprites.list_of_objects[-1], text_map2)
+    interaction_2 = Interaction(player2, sprites2, drawing, walls2, sprites2.list_of_objects[0], text_map2)
+    interaction2_2 = Interaction(player2, sprites2, drawing, walls2, sprites2.list_of_objects[-1], text_map2)
     ENEMY_EVENT_TYPE = 30
     delay = 50
+    next_pos_2 = (sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y)
+    next_pos2_2 = (sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y)
+    next_pos = sprites.list_of_objects[0].pas
+    next_pos2 = sprites.list_of_objects[-1].pas
     pygame.time.set_timer(ENEMY_EVENT_TYPE, delay)
     pygame.mixer.init()
     pygame.font.init()
@@ -835,10 +830,7 @@ def main():
                 sc.blit(image, (x, y))
             pygame.display.flip()
 
-
         if FLAG_4:
-            next_pos = sprites.list_of_objects[0].pas
-            next_pos2 = sprites.list_of_objects[-1].pas
             # per = schedule.every(1).seconds.do(time)
             # schedule.cancel_job(per)
             for event in pygame.event.get():
@@ -1033,10 +1025,6 @@ def main():
             pygame.display.flip()
 
         if FLAG_7:
-            sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y = 1350, 1150
-            sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y = 1350, 1250
-            next_pos_2 = (sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y)
-            next_pos2_2 = (sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
@@ -1058,7 +1046,7 @@ def main():
                 elif event.type == ENEMY_EVENT_TYPE:
                     next_pos_2 = interaction_2.npc_move()
                     next_pos2_2 = interaction2_2.npc_move()
-                    print(next_pos, next_pos2)
+                    print(next_pos_2, next_pos2_2)
 
             if (sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y) != next_pos_2:
                 if next_pos_2[0] > sprites2.list_of_objects[0].x:
@@ -1072,7 +1060,7 @@ def main():
                 elif next_pos_2[1] < sprites2.list_of_objects[0].y:
                     sprites2.list_of_objects[0].y -= 5
             else:
-                print(1)
+                print(sprites2.list_of_objects[0].x)
 
             if (sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y) != next_pos2_2:
                 if next_pos2_2[0] > sprites2.list_of_objects[-1].x:
@@ -1104,7 +1092,7 @@ def main():
             drawing.mini_map(player2, mini_map2, MOMEY_MINI2)
 
             drawing.life()
-            clock.tick(60)
+            clock.tick(80)
 
             pygame.display.flip()
             clock.tick()
