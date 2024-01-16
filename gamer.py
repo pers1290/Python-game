@@ -412,7 +412,7 @@ class Sprites:
         self.list_of_objects = [SpriteObject(self.sprite_types['sirenhead'], True, (13.50, 11.50), 0.5, 0.8)]
         for i in self.sprite:
             self.list_of_objects.append(SpriteObject(self.sprite_types[i[0]], i[1], i[2], i[3], i[4]))
-        self.list_of_objects.append(SpriteObject(self.sprite_types['sirenhead'], True, (13.50, 12.50), 0.5, 0.8))
+        self.list_of_objects.append(SpriteObject(self.sprite_types['sirenhead'], True, (14.50, 10.50), 0.5, 0.8))
 
 
 class SpriteObject:
@@ -764,6 +764,10 @@ def main():
             sc.blit(tele2, (10, 10))
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
+            interaction = Interaction(player, sprites, drawing, walls1, sprites.list_of_objects[0], text_map)
+            interaction2 = Interaction(player, sprites, drawing, walls1, sprites.list_of_objects[-1], text_map)
+            interaction_2 = Interaction(player2, sprites2, drawing, walls2, sprites2.list_of_objects[0], text_map2)
+            interaction2_2 = Interaction(player2, sprites2, drawing, walls2, sprites2.list_of_objects[-1], text_map2)
             pygame.display.flip()
 
         if FLAG_11:
@@ -1092,6 +1096,7 @@ def main():
                 timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
                 CL = 0
                 LVL = 2
+
 
         if FLAG_5:
             sc.fill((0, 0, 0))
