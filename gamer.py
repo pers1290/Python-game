@@ -53,14 +53,17 @@ ANGLE = 0
 LVL = 1
 starttime = 0
 g = 0
+clic = 0
+CL = 0
 
 
 def player_speed():
+    global clic
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LSHIFT]:
-        return 17
+        return 10 + (clic * 1.15)
     else:
-        return 5
+        return 5 + (clic * 1.15)
 
 
 # карта
@@ -364,6 +367,7 @@ class Drawing:
 
     def mini_map(self, player, mini_map, money_pos):
         global A
+        global CL
         global ANGLE
         g = 1.15
         jk = 2.5
@@ -391,9 +395,9 @@ class Drawing:
             rot_coin = pygame.transform.scale(rot_coin, (abs(new_width), coin_rect.height))
             self.sc_map.blit(rot_coin, rot_coin.get_rect(center=(i[0] * g * 8 + jk, i[1] * g * 8 + jk)))
         self.sc.blit(self.sc_map, MAP_POS)
-        a2 = 11
+        a2 = 3
         myfont = pygame.font.Font("data/shrift.ttf", 24)
-        text = f'Собрано: {A} из {a2}'
+        text = f'Собрано: {CL} из {a2}'
         rend = myfont.render(text, 0, (50, 0, 0))
         self.sc.blit(rend, (30, HEIGHT - 65))
 
@@ -402,12 +406,12 @@ class Sprites:
     def __init__(self, sprite):
         self.sprite = sprite
         self.sprite_types = {'money': pygame.image.load('data/coi.png').convert_alpha(),
-                             'sirenhead': pygame.image.load('data/lol.png').convert_alpha()}
+                             'sirenhead': pygame.image.load('data/lol.png').convert_alpha(),
+                             'clihi': pygame.image.load('data/cl.png').convert_alpha()}
 
         self.list_of_objects = [SpriteObject(self.sprite_types['sirenhead'], True, (13.50, 11.50), 0.5, 0.8)]
         for i in self.sprite:
-            if i != '1':
-                self.list_of_objects.append(SpriteObject(self.sprite_types[i[0]], i[1], i[2], i[3], i[4]))
+            self.list_of_objects.append(SpriteObject(self.sprite_types[i[0]], i[1], i[2], i[3], i[4]))
         self.list_of_objects.append(SpriteObject(self.sprite_types['sirenhead'], True, (13.50, 12.50), 0.5, 0.8))
 
 
@@ -506,10 +510,14 @@ def main():
         ['money', True, (23.28, 3.57), 1.8, 0.4],
         ['money', True, (29.47, 15.73), 1.8, 0.4],
         ['money', True, (6.60, 2.57), 1.8, 0.4],
-        ['money', True, (20.60, 11.60), 1.8, 0.4]
+        ['money', True, (20.60, 11.60), 1.8, 0.4],
+        ['clihi', True, (31.52, 17.55), 1.8, 0.4],
+        ['clihi', True, (13.61, 7.27), 1.8, 0.4],
+        ['clihi', True, (1.75, 17.56), 1.8, 0.4]
     ]
     user_text = ''
-    posis = [(), (2, 1), (5, 13), (3, 15), (11, 16), (20, 17), (30, 6), (13, 1), (23, 3), (29, 15), (6, 2), (20, 11)]
+    posis = [(), (2, 1), (5, 13), (3, 15), (11, 16), (20, 17), (30, 6), (13, 1), (23, 3), (29, 15), (6, 2), (20, 11),
+             (31, 17), (13, 7), (1, 17)]
 
     pygame.init()
     sc = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -555,8 +563,12 @@ def main():
     star_01 = pygame.transform.scale(star, (50, 50))
     star_02 = pygame.transform.scale(star2, (50, 50))
     star_03 = pygame.transform.scale(star, (23, 23))
+    tele = pygame.image.load('data/tele.png').convert_alpha()
+    tele2 = pygame.transform.scale(tele, (50, 50))
     drav2 = False
     true = True
+    coin = pygame.image.load('data/coi.png').convert_alpha()
+    coin2 = pygame.transform.scale(coin, (50, 50))
     sd = [(410, 550), (480, 550), (550, 550), (620, 550), (690, 550)]
     fh = [(110, 12), (140, 12), (170, 12), (200, 12), (230, 12)]
     with open('star.txt', 'r', encoding="utf-8") as d:
@@ -581,14 +593,20 @@ def main():
     FLAG_9 = False
     FLAG_10 = False
     FLAG_11 = False
+    FLAG_22 = False
     lvl1 = True
     lvl2 = False
+    t1 = False
+    t2 = False
     global player_angle
     global A
     global LVL
     global g
     global starttime
     global MOMEY_MINI
+    global clic
+    global LIFE1
+    global  CL
     k = 1
     x, y = 0, 0
     bestminut = 0
@@ -655,10 +673,11 @@ def main():
                         # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
+                    if x <= 60 and x >= 10 and y <= 60 and y >= 10:
+                        FLAG_22 = True
+                        FLAG_10 = False
                     if x <= 678 and x >= 523 and y <= 418 and y >= 275:
                         if lvl1:
-                            A = 10
-
                             list_of_objects = [
                                 ['money', True, (2.28, 1.67), 1.8, 0.4],
                                 ['money', True, (5.59, 13.24), 1.8, 0.4],
@@ -670,14 +689,15 @@ def main():
                                 ['money', True, (23.28, 3.57), 1.8, 0.4],
                                 ['money', True, (29.47, 15.73), 1.8, 0.4],
                                 ['money', True, (6.60, 2.57), 1.8, 0.4],
-                                ['money', True, (20.60, 11.60), 1.8, 0.4]
+                                ['money', True, (20.60, 11.60), 1.8, 0.4],
+                                ['clihi', True, (31.52, 17.55), 1.8, 0.4],
+                                ['clihi', True, (13.61, 7.27), 1.8, 0.4],
+                                ['clihi', True, (1.75, 17.56), 1.8, 0.4]
                             ]
                             sprites = Sprites(list_of_objects)
                             FLAG_10 = False
                             FLAG_11 = True
                         if lvl2:
-                            A = 10
-
                             list_of_objects = [
                                 ['money', True, (2.28, 1.67), 1.8, 0.4],
                                 ['money', True, (5.59, 13.24), 1.8, 0.4],
@@ -689,7 +709,10 @@ def main():
                                 ['money', True, (23.28, 3.57), 1.8, 0.4],
                                 ['money', True, (29.47, 15.73), 1.8, 0.4],
                                 ['money', True, (6.60, 2.57), 1.8, 0.4],
-                                ['money', True, (20.60, 11.60), 1.8, 0.4]
+                                ['money', True, (20.60, 11.60), 1.8, 0.4],
+                                ['clihi', True, (31.52, 17.55), 1.8, 0.4],
+                                ['clihi', True, (13.61, 7.27), 1.8, 0.4],
+                                ['clihi', True, (1.75, 17.56), 1.8, 0.4]
                             ]
                             sprites2 = Sprites(list_of_objects)
                             FLAG_10 = False
@@ -707,7 +730,6 @@ def main():
                 if event.type == pygame.MOUSEMOTION:
                     sc.blit(image, event.pos)
                     x, y = event.pos
-
             d_txt = f'Coбери все монеты!'
             d_txt1 = f'и возвращайся обратно'
             d_name = f'Аккаунт: {user_text}'
@@ -736,9 +758,10 @@ def main():
             rend3 = myfont2.render(d_lvl, 0, (150, 0, 0))
 
             sc.blit(rend3, (20, 220))
-            sc.blit(rend2, (20, 20))
+            sc.blit(rend2, (10, 70))
             sc.blit(rend, (460, 450))
             sc.blit(rend1, (430, 510))
+            sc.blit(tele2, (10, 10))
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
             pygame.display.flip()
@@ -1050,15 +1073,24 @@ def main():
 
             if (x_new, y_new) in posis:
                 s = posis.index((x_new, y_new))
+                if s == 12:
+                    CL += 1
+                    del posis[12]
+                if s == 13:
+                    CL += 1
+                    del posis[13]
+                if s == 14:
+                    del posis[14]
+                    CL += 1
                 sprites.list_of_objects[s] = 1
 
-            if x_new == 13 and y_new == 14 and A == 11:
+            if x_new == 13 and y_new == 14 and CL == 3:
                 FLAG_4 = False
                 minut = 0
                 bestminut = 0
                 FLAG_5 = True
                 timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
-                A = 10
+                CL = 0
                 LVL = 2
 
         if FLAG_5:
@@ -1222,7 +1254,7 @@ def main():
             player2.movement()
             sc.fill((0, 0, 0))
 
-            # print(player.pos()[0] / TILE, player.pos()[1] / TILE)
+            print(player2.x / TILE, player2.y / TILE)
 
             x_new = int(player2.x / TILE)
             y_new = int(player2.y / TILE)
@@ -1247,13 +1279,23 @@ def main():
 
             if (x_new, y_new) in posis:
                 s = posis.index((x_new, y_new))
-                sprites2.list_of_objects[s] = 1
-            if x_new == 13 and y_new == 14 and A == 11:
+                sprites.list_of_objects[s] = 1
+                if s == 12:
+                    CL += 1
+                    del posis[12]
+                if s == 13:
+                    CL += 1
+                    del posis[13]
+                if s == 14:
+                    CL += 1
+                    del posis[14]
+
+            if x_new == 13 and y_new == 14 and CL == 3:
                 FLAG_7 = False
                 minut = 0
                 FLAG_8 = True
                 timelvl2 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
-                A = 10
+                CL = 0
 
         if FLAG_8:
             sc.fill((0, 0, 0))
@@ -1384,9 +1426,13 @@ def main():
                     if x <= 1111 and x >= 938 and y <= 1000 and y >= 700:
                         MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
                                       (29, 15), (30, 6)]
+                        posis = [(), (2, 1), (5, 13), (3, 15), (11, 16), (20, 17), (30, 6), (13, 1), (23, 3), (29, 15),
+                                 (6, 2), (20, 11),
+                                 (31, 17), (13, 7), (1, 17)]
                         with open('star.txt', 'a', encoding="utf-8") as jh:
                             if g > 0:
                                 jh.write(f'{str(g)}')
+                        A = 10
                         g = 0
                         true = True
                         drav2 = False
@@ -1416,6 +1462,93 @@ def main():
             for o in fh[:df]:
                 sc.blit(star_03, o)
 
+            pygame.display.flip()
+
+        if FLAG_22:
+            sc.fill((0, 0, 0))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                if vol < 0:
+                    vol = 0.0
+                if vol > 1:
+                    vol = 1.0
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit()
+                    if event.key == pygame.K_DOWN:
+                        vol -= 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                    if event.key == pygame.K_UP:
+                        vol += 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = event.pos
+                    if x <= 1111 and x >= 938 and y <= 1000 and y >= 700:
+                        FLAG_22 = False
+                        FLAG_10 = True
+                    if x >= 270 and x <= 401 and y >= 485 and y <= 518:
+                        if A >= 6:
+                            A -= 6
+                            clic += 1
+                            t1 = True
+                        else:
+                            t1 = False
+                            t2 = True
+                    if x >= 805 and x <= 937 and y >= 485 and y <= 518:
+                        if A >= 6:
+                            A -= 6
+                            LIFE1 += 1
+                            t1 = True
+                        else:
+                            t2 = True
+                            t1 = False
+
+                if event.type == pygame.MOUSEMOTION:
+                    sc.blit(image, event.pos)
+                    x, y = event.pos
+
+            new_fon = pygame.font.Font("data/shrift.ttf", 50)
+            new = new_fon.render(str(A), 0, (255, 190, 0))
+            mag = pygame.font.Font("data/shrift.ttf", 80)
+            magasin = mag.render('МАГАЗИН', 0, (0, 0, 255))
+            sp = pygame.font.Font("data/shrift.ttf", 40)
+            sp2 = sp.render('УВЕЛИЧЕНИЕ СКОРОСТИ', 0, (0, 255, 0))
+            sp3 = pygame.font.Font("data/shrift.ttf", 40)
+            sp4 = sp3.render('НОВАЯ ЖИЗНЬ', 0, (0, 255, 0))
+            t = pygame.font.Font("data/shrift.ttf", 24)
+            text = t.render('Выйти в меню', 0, (0, 0, 255))
+            buy1 = pygame.font.Font("data/shrift.ttf", 40)
+            buy2 = buy1.render('КУПИТЬ', 0, (255, 255, 0))
+            buy3 = pygame.font.Font("data/shrift.ttf", 40)
+            buy4 = buy3.render('КУПИТЬ', 0, (255, 255, 0))
+            z1 = pygame.font.Font("data/shrift.ttf", 40)
+            z2 = z1.render('  ЦЕНА   6 М', 0, (0, 255, 0))
+            z3 = pygame.font.Font("data/shrift.ttf", 40)
+            z4 = z3.render('ЦЕНА   6 М', 0, (0, 255, 0))
+            sc.blit(new, (10, 10))
+            sc.blit(magasin, (430, 50))
+            sc.blit(coin2, (60, 13))
+            sc.blit(text, (950, 700))
+            sc.blit(sp2, (150, 350))
+            sc.blit(sp4, (750, 350))
+            sc.blit(buy2, (270, 480))
+            sc.blit(buy4, (805, 480))
+            sc.blit(z2, (250, 400))
+            sc.blit(z4, (790, 400))
+            if t1:
+                w1 = pygame.font.Font("data/shrift.ttf", 24)
+                w2 = w1.render('ПОКУПКА СОВЕРШЕНА', 0, (0, 200, 0))
+                sc.blit(w2, (10, 750))
+            if t2:
+                w1 = pygame.font.Font("data/shrift.ttf", 24)
+                w2 = w1.render('НЕДОСТАТОЧНО СРЕДСТВ', 0, (255, 0, 0))
+                sc.blit(w2, (10, 750))
+
+            if x != 0 and y != 0:
+                sc.blit(image, (x, y))
             pygame.display.flip()
 
 
