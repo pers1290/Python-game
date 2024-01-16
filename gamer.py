@@ -3,7 +3,6 @@ import math
 
 import sqlite3
 
-
 # игровые настройки
 WIDTH = 1200
 HEIGHT = 800
@@ -49,8 +48,6 @@ FAKE_RAYS = 100
 
 MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
               (29, 15), (30, 6)]
-MOMEY_MINI2 = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
-               (29, 15), (30, 6)]
 A = 10
 ANGLE = 0
 LVL = 1
@@ -61,7 +58,7 @@ g = 0
 def player_speed():
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LSHIFT]:
-        return 10
+        return 17
     else:
         return 5
 
@@ -401,7 +398,6 @@ class Drawing:
         self.sc.blit(rend, (30, HEIGHT - 65))
 
 
-
 class Sprites:
     def __init__(self, sprite):
         self.sprite = sprite
@@ -481,7 +477,8 @@ class Interaction:
             x, y = queue.pop(0)
             for dx, dy in (0, 1), (1, 0), (-1, 0), (0, -1):
                 next_x, next_y = x + dx, y + dy
-                if 0 <= next_x < width and 0 < next_y < height and not self.text_map[next_y][next_x] and distance[next_y][next_x] == INF:
+                if 0 <= next_x < width and 0 < next_y < height and not self.text_map[next_y][next_x] and \
+                        distance[next_y][next_x] == INF:
                     distance[next_y][next_x] = distance[y][x] + 1
                     prev[next_y][next_x] = (x, y)
                     queue.append((next_x, next_y))
@@ -492,14 +489,12 @@ class Interaction:
             x, y = prev[y][x]
         return x * 100 + 50, y * 100 + 50
 
-
-
     def npc_move(self):
-        return self.find_path_step((round(self.obj.x // 100), round(self.obj.y // 100)), (round(self.player.x // 100), round(self.player.y // 100)))
+        return self.find_path_step((round(self.obj.x // 100), round(self.obj.y // 100)),
+                                   (round(self.player.x // 100), round(self.player.y // 100)))
 
 
 def main():
-
     list_of_objects = [
         ['money', True, (2.28, 1.67), 1.8, 0.4],
         ['money', True, (5.59, 13.24), 1.8, 0.4],
@@ -593,6 +588,7 @@ def main():
     global LVL
     global g
     global starttime
+    global MOMEY_MINI
     k = 1
     x, y = 0, 0
     bestminut = 0
@@ -738,16 +734,13 @@ def main():
                 rend5 = myfont.render(d_lvl2, 0, (150, 0, 0))
                 sc.blit(rend5, (50, 320))
 
-
             rend3 = myfont2.render(d_lvl, 0, (150, 0, 0))
-
 
             sc.blit(rend3, (20, 220))
             sc.blit(rend2, (20, 20))
             sc.blit(rend, (460, 450))
             sc.blit(rend1, (430, 510))
             pygame.display.flip()
-
 
         if FLAG_11:
             sc.fill((0, 0, 0))
@@ -1027,7 +1020,6 @@ def main():
                 elif next_pos2[1] < sprites.list_of_objects[-1].y:
                     sprites.list_of_objects[-1].y -= 5
 
-
             player.movement()
             sc.fill((0, 0, 0))
 
@@ -1239,7 +1231,7 @@ def main():
             drawing.world(walls + [obj.object_locate(player2, walls) for obj in sprites2.list_of_objects if obj != 1])
             drawing.fps(clock)
             drawing.time()
-            drawing.mini_map(player2, mini_map2, MOMEY_MINI2)
+            drawing.mini_map(player2, mini_map2, MOMEY_MINI)
 
             drawing.life()
             clock.tick(80)
@@ -1311,8 +1303,8 @@ def main():
                     sc.blit(image, event.pos)
                     x, y = event.pos
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                        FLAG_8 = False
-                        FLAG_9 = True
+                    FLAG_8 = False
+                    FLAG_9 = True
             while int(timelvl2) >= 60:
                 minut += 1
                 timelvl2 = int(timelvl2) - 60
@@ -1341,9 +1333,9 @@ def main():
                 sc.blit(star_02, i)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    with open('star.txt', 'a', encoding="utf-8") as f:
+                    with open('star.txt', 'a', encoding="utf-8") as jh:
                         if g > 0:
-                            f.write(f'{str(g)}')
+                            jh.write(f'{str(g)}')
                     exit()
                 if vol < 0:
                     vol = 0.0
@@ -1351,9 +1343,9 @@ def main():
                     vol = 1.0
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        with open('star.txt', 'a', encoding="utf-8") as f:
+                        with open('star.txt', 'a', encoding="utf-8") as jh:
                             if g > 0:
-                                f.write(f'{str(g)}')
+                                jh.write(f'{str(g)}')
                         exit()
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
@@ -1389,6 +1381,14 @@ def main():
                     if x <= 750 and x >= 420 and y <= 600 and y >= 550:
                         true = False
                     if x <= 1111 and x >= 938 and y <= 1000 and y >= 700:
+                        MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
+                                      (29, 15), (30, 6)]
+                        with open('star.txt', 'a', encoding="utf-8") as jh:
+                            if g > 0:
+                                jh.write(f'{str(g)}')
+                        g = 0
+                        true = True
+                        drav2 = False
                         FLAG_9 = False
                         FLAG_10 = True
             if drav2:
