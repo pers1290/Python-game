@@ -395,14 +395,11 @@ class Drawing:
             self.sc_map.blit(rot_coin, rot_coin.get_rect(center=(i[0] * g * 8 + jk, i[1] * g * 8 + jk)))
         self.sc.blit(self.sc_map, MAP_POS)
         a2 = 11
-        l = LVL
-        lvl = f'lvl: {l}'
         myfont = pygame.font.Font("data/shrift.ttf", 24)
         text = f'Собрано: {A} из {a2}'
-        rend1 = myfont.render(lvl, 0, (50, 0, 0))
         rend = myfont.render(text, 0, (50, 0, 0))
         self.sc.blit(rend, (30, HEIGHT - 65))
-        self.sc.blit(rend1, (250, HEIGHT - 65))
+
 
 
 class Sprites:
@@ -502,6 +499,7 @@ class Interaction:
 
 
 def main():
+
     list_of_objects = [
         ['money', True, (2.28, 1.67), 1.8, 0.4],
         ['money', True, (5.59, 13.24), 1.8, 0.4],
@@ -586,15 +584,20 @@ def main():
     FLAG_7 = False
     FLAG_8 = False
     FLAG_9 = False
+    FLAG_10 = False
+    FLAG_11 = False
+    lvl1 = True
+    lvl2 = False
+    global player_angle
     global A
     global LVL
     global g
     global starttime
     k = 1
     x, y = 0, 0
+    bestminut = 0
 
     while True:
-
         if FLAG_1:
             sc.blit(fom, (0, 0))
             for event in pygame.event.get():
@@ -631,6 +634,153 @@ def main():
                     x, y = event.pos
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
+            pygame.display.flip()
+
+        if FLAG_10:
+
+            sc.blit(fom, (0, 0))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                if vol < 0:
+                    vol = 0.0
+                if vol > 1:
+                    vol = 1.0
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit()
+                    if event.key == pygame.K_DOWN:
+                        vol -= 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                    if event.key == pygame.K_UP:
+                        vol += 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = event.pos
+                    if x <= 678 and x >= 523 and y <= 418 and y >= 275:
+                        if lvl1:
+                            A = 10
+
+                            list_of_objects = [
+                                ['money', True, (2.28, 1.67), 1.8, 0.4],
+                                ['money', True, (5.59, 13.24), 1.8, 0.4],
+                                ['money', True, (3.53, 15.69), 1.8, 0.4],
+                                ['money', True, (11.46, 16.60), 1.8, 0.4],
+                                ['money', True, (20.40, 17.33), 1.8, 0.4],
+                                ['money', True, (30.68, 6.46), 1.8, 0.4],
+                                ['money', True, (13.68, 1.64), 1.8, 0.4],
+                                ['money', True, (23.28, 3.57), 1.8, 0.4],
+                                ['money', True, (29.47, 15.73), 1.8, 0.4],
+                                ['money', True, (6.60, 2.57), 1.8, 0.4],
+                                ['money', True, (20.60, 11.60), 1.8, 0.4]
+                            ]
+                            sprites = Sprites(list_of_objects)
+                            FLAG_10 = False
+                            FLAG_11 = True
+                        if lvl2:
+                            A = 10
+
+                            list_of_objects = [
+                                ['money', True, (2.28, 1.67), 1.8, 0.4],
+                                ['money', True, (5.59, 13.24), 1.8, 0.4],
+                                ['money', True, (3.53, 15.69), 1.8, 0.4],
+                                ['money', True, (11.46, 16.60), 1.8, 0.4],
+                                ['money', True, (20.40, 17.33), 1.8, 0.4],
+                                ['money', True, (30.68, 6.46), 1.8, 0.4],
+                                ['money', True, (13.68, 1.64), 1.8, 0.4],
+                                ['money', True, (23.28, 3.57), 1.8, 0.4],
+                                ['money', True, (29.47, 15.73), 1.8, 0.4],
+                                ['money', True, (6.60, 2.57), 1.8, 0.4],
+                                ['money', True, (20.60, 11.60), 1.8, 0.4]
+                            ]
+                            sprites2 = Sprites(list_of_objects)
+                            FLAG_10 = False
+                            FLAG_6 = True
+                    if x <= 1187 and x >= 1068 and y <= 124 and y >= 8:
+                        FLAG_10 = False
+                        FLAG_2 = True
+                    if x <= 140 and x >= 45 and y <= 310 and y >= 280:
+                        lvl2 = False
+                        lvl1 = True
+                    if x <= 140 and x >= 45 and y <= 370 and y >= 320:
+                        lvl1 = False
+                        lvl2 = True
+
+                if event.type == pygame.MOUSEMOTION:
+                    sc.blit(image, event.pos)
+                    x, y = event.pos
+            if x != 0 and y != 0:
+                sc.blit(image, (x, y))
+            d_txt = f'Coбери все монеты!'
+            d_txt1 = f'и возвращайся обратно'
+            d_name = f'Аккаунт: {user_text}'
+            myfont2 = pygame.font.Font("data/shrift.ttf", 30)
+            myfont = pygame.font.Font("data/shrift.ttf", 50)
+            rend = myfont2.render(d_txt, 0, (255, 100, 100))
+            rend1 = myfont2.render(d_txt1, 0, (255, 100, 100))
+            rend2 = myfont.render(d_name, 0, (200, 0, 0))
+            d_lvl = f'выберите уровень:'
+            d_lvl1 = f'lvl1'
+            d_lvl2 = f'lvl2'
+
+            if lvl1:
+                rend4 = myfont.render(d_lvl1, 0, (0, 150, 0))
+                sc.blit(rend4, (50, 270))
+            if not lvl1:
+                rend4 = myfont.render(d_lvl1, 0, (150, 0, 0))
+                sc.blit(rend4, (50, 270))
+            if lvl2:
+                rend5 = myfont.render(d_lvl2, 0, (0, 150, 0))
+                sc.blit(rend5, (50, 320))
+            if not lvl2:
+                rend5 = myfont.render(d_lvl2, 0, (150, 0, 0))
+                sc.blit(rend5, (50, 320))
+
+
+            rend3 = myfont2.render(d_lvl, 0, (150, 0, 0))
+
+
+            sc.blit(rend3, (20, 220))
+            sc.blit(rend2, (20, 20))
+            sc.blit(rend, (460, 450))
+            sc.blit(rend1, (430, 510))
+            pygame.display.flip()
+
+
+        if FLAG_11:
+            sc.fill((0, 0, 0))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                if vol < 0:
+                    vol = 0.0
+                if vol > 1:
+                    vol = 1.0
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit()
+                    if event.key == pygame.K_DOWN:
+                        vol -= 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                    if event.key == pygame.K_UP:
+                        vol += 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
+                if event.type == pygame.MOUSEMOTION:
+                    sc.blit(image, event.pos)
+                    x, y = event.pos
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    FLAG_11 = False
+                    starttime = pygame.time.get_ticks() // 1000
+                    FLAG_4 = True
+            st_text = f.render('LEVEL 1', 0, (255, 0, 0))
+            sc.blit(st_text, (380, 330))
+            if x != 0 and y != 0:
+                sc.blit(image, (x, y))
+
             pygame.display.flip()
 
         if FLAG_2:
@@ -692,7 +842,6 @@ def main():
                         # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
-                    # print(x, y)
                     if x <= 678 and x >= 523 and y <= 418 and y >= 275:
                         FLAG_3 = False
                         if user_text != '':
@@ -703,13 +852,13 @@ def main():
                             if str(cur.execute(
                                     f'''select name from game_db where name = "{user_text}"''').fetchall()) != '[]':
                                 starttime = pygame.time.get_ticks() // 1000
-                                FLAG_4 = True
+                                FLAG_10 = True
                             else:
                                 with con:
                                     cur.execute(f'''INSERT INTO game_db(name, lvl1, lvl2)
                                      VALUES('{user_text}', '', '')''')
                                 starttime = pygame.time.get_ticks() // 1000
-                                FLAG_4 = True
+                                FLAG_10 = True
                             con.close()
 
 
@@ -897,6 +1046,12 @@ def main():
             drawing.life()
             clock.tick(80)
 
+            l = 1
+            lvl12 = f'lvl: {l}'
+            myfont = pygame.font.Font("data/shrift.ttf", 24)
+            rend1 = myfont.render(lvl12, 0, (50, 0, 0))
+            sc.blit(rend1, (250, HEIGHT - 65))
+
             pygame.display.flip()
             clock.tick()
 
@@ -964,7 +1119,7 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if k == 1:
                         FLAG_5 = False
-                        FLAG_6 = True
+                        FLAG_9 = True
             while int(timelvl1) >= 60:
                 minut += 1
                 timelvl1 = int(timelvl1) - 60
@@ -1017,7 +1172,7 @@ def main():
                     FLAG_6 = False
                     starttime = pygame.time.get_ticks() // 1000
                     FLAG_7 = True
-            st_text = f.render('LEVAL 2', 0, (255, 0, 0))
+            st_text = f.render('LEVEL 2', 0, (255, 0, 0))
             sc.blit(st_text, (380, 330))
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
@@ -1089,6 +1244,11 @@ def main():
             drawing.life()
             clock.tick(80)
 
+            l = 2
+            lvl12 = f'lvl: {l}'
+            myfont = pygame.font.Font("data/shrift.ttf", 24)
+            rend1 = myfont.render(lvl12, 0, (50, 0, 0))
+            sc.blit(rend1, (250, HEIGHT - 65))
             pygame.display.flip()
             clock.tick()
 
@@ -1228,6 +1388,9 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if x <= 750 and x >= 420 and y <= 600 and y >= 550:
                         true = False
+                    if x <= 1111 and x >= 938 and y <= 1000 and y >= 700:
+                        FLAG_9 = False
+                        FLAG_10 = True
             if drav2:
                 for j in sd[:g]:
                     sc.blit(star_01, j)
@@ -1235,12 +1398,15 @@ def main():
             st_text = f.render('КОНЕЦ', 0, (255, 0, 0))
             sc.blit(st_text, (390, 300))
             d_time = f'поддержка автора: 89645211748(тинькофф)'
+            d_back = f'Выйти в меню'
             myfont = pygame.font.Font("data/shrift.ttf", 24)
             stars = pygame.font.Font("data/shrift.ttf", 24)
             ret = pygame.font.Font("data/shrift.ttf", 24)
             r = ret.render(f'рейтинг', 0, (0, 150, 0))
             st = stars.render('как вам игра?', 0, (0, 150, 0))
             rend = myfont.render(d_time, 0, (0, 150, 0))
+            rend1 = myfont.render(d_back, 0, (0, 150, 0))
+            sc.blit(rend1, (950, 700))
             sc.blit(rend, (350, 440))
             sc.blit(st, (500, 490))
             sc.blit(r, (10, 10))
