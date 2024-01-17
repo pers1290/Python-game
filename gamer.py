@@ -597,6 +597,7 @@ def main():
     lvl2 = False
     t1 = False
     t2 = False
+    min_flag = False
     global player_angle
     global A
     global LVL
@@ -677,48 +678,15 @@ def main():
                         FLAG_10 = False
                     if x <= 678 and x >= 523 and y <= 418 and y >= 275:
                         if lvl1:
-                            list_of_objects = [
-                                ['money', True, (2.28, 1.67), 1.8, 0.4],
-                                ['money', True, (5.59, 13.24), 1.8, 0.4],
-                                ['money', True, (3.53, 15.69), 1.8, 0.4],
-                                ['money', True, (11.46, 16.60), 1.8, 0.4],
-                                ['money', True, (20.40, 17.33), 1.8, 0.4],
-                                ['money', True, (30.68, 6.46), 1.8, 0.4],
-                                ['money', True, (13.68, 1.64), 1.8, 0.4],
-                                ['money', True, (23.28, 3.57), 1.8, 0.4],
-                                ['money', True, (29.47, 15.73), 1.8, 0.4],
-                                ['money', True, (6.60, 2.57), 1.8, 0.4],
-                                ['money', True, (20.60, 11.60), 1.8, 0.4],
-                                ['clihi', True, (31.52, 17.55), 1.8, 0.4],
-                                ['clihi', True, (13.61, 7.27), 1.8, 0.4],
-                                ['clihi', True, (1.75, 17.56), 1.8, 0.4]
-                            ]
-                            sprites = Sprites(list_of_objects)
                             FLAG_10 = False
                             FLAG_11 = True
                         if lvl2:
-                            list_of_objects = [
-                                ['money', True, (2.28, 1.67), 1.8, 0.4],
-                                ['money', True, (5.59, 13.24), 1.8, 0.4],
-                                ['money', True, (3.53, 15.69), 1.8, 0.4],
-                                ['money', True, (11.46, 16.60), 1.8, 0.4],
-                                ['money', True, (20.40, 17.33), 1.8, 0.4],
-                                ['money', True, (30.68, 6.46), 1.8, 0.4],
-                                ['money', True, (13.68, 1.64), 1.8, 0.4],
-                                ['money', True, (23.28, 3.57), 1.8, 0.4],
-                                ['money', True, (29.47, 15.73), 1.8, 0.4],
-                                ['money', True, (6.60, 2.57), 1.8, 0.4],
-                                ['money', True, (20.60, 11.60), 1.8, 0.4],
-                                ['clihi', True, (31.52, 17.55), 1.8, 0.4],
-                                ['clihi', True, (13.61, 7.27), 1.8, 0.4],
-                                ['clihi', True, (1.75, 17.56), 1.8, 0.4]
-                            ]
-                            sprites2 = Sprites(list_of_objects)
                             FLAG_10 = False
                             FLAG_6 = True
                     if x <= 1187 and x >= 1068 and y <= 124 and y >= 8:
                         FLAG_10 = False
                         FLAG_2 = True
+                        min_flag = True
                     if x <= 140 and x >= 45 and y <= 310 and y >= 280:
                         lvl2 = False
                         lvl1 = True
@@ -729,7 +697,7 @@ def main():
                 if event.type == pygame.MOUSEMOTION:
                     sc.blit(image, event.pos)
                     x, y = event.pos
-            d_txt = f'Coбери все монеты!'
+            d_txt = f'Coбери все ключи!'
             d_txt1 = f'и возвращайся обратно'
             d_name = f'Аккаунт: {user_text}'
             myfont2 = pygame.font.Font("data/shrift.ttf", 30)
@@ -827,7 +795,10 @@ def main():
                     x, y = event.pos
                     if x <= 1187 and x >= 1068 and y <= 124 and y >= 8:
                         FLAG_2 = False
-                        if user_text == '':
+                        if min_flag:
+                            FLAG_10 = True
+                            min_flag = False
+                        elif user_text == '':
                             FLAG_1 = True
                         else:
                             FLAG_3 = True
@@ -1080,6 +1051,9 @@ def main():
             if (x_new, y_new) in cl_pos:
                 sq = cl_pos.index((x_new, y_new))
                 sprites.list_of_objects[sq + 12] = 1
+                pygame.mixer.music.load('data/coin.mp3')
+                pygame.mixer.Channel(1).play(pygame.mixer.Sound('data/coin.mp3'))
+                pygame.mixer.Channel(1).set_volume(0.3)
                 CL += 1
                 cl_pos[sq] = False
 
@@ -1281,6 +1255,9 @@ def main():
                 sq = cl_pos.index((x_new, y_new))
                 sprites2.list_of_objects[sq + 12] = 1
                 CL += 1
+                pygame.mixer.music.load('data/coin.mp3')
+                pygame.mixer.Channel(1).play(pygame.mixer.Sound('data/coin.mp3'))
+                pygame.mixer.Channel(1).set_volume(0.3)
                 cl_pos[sq] = False
 
             if x_new == 13 and y_new == 14 and CL == 3:
@@ -1302,7 +1279,7 @@ def main():
                     cur.execute(f'''UPDATE game_db
                     SET lvl2 = {timelvl2}
                     WHERE name = "{user_text}"''')
-            elif result[0][0] > timelvl2:
+            elif int(result[0][0]) > timelvl2:
                 with con:
                     cur.execute(f'''UPDATE game_db
                     SET lvl2 = {timelvl2}
@@ -1417,6 +1394,24 @@ def main():
                     if x <= 750 and x >= 420 and y <= 600 and y >= 550:
                         true = False
                     if x <= 1111 and x >= 938 and y <= 1000 and y >= 700:
+                        list_of_objects = [
+                            ['money', True, (2.28, 1.67), 1.8, 0.4],
+                            ['money', True, (5.59, 13.24), 1.8, 0.4],
+                            ['money', True, (3.53, 15.69), 1.8, 0.4],
+                            ['money', True, (11.46, 16.60), 1.8, 0.4],
+                            ['money', True, (20.40, 17.33), 1.8, 0.4],
+                            ['money', True, (30.68, 6.46), 1.8, 0.4],
+                            ['money', True, (13.68, 1.64), 1.8, 0.4],
+                            ['money', True, (23.28, 3.57), 1.8, 0.4],
+                            ['money', True, (29.47, 15.73), 1.8, 0.4],
+                            ['money', True, (6.60, 2.57), 1.8, 0.4],
+                            ['money', True, (20.60, 11.60), 1.8, 0.4],
+                            ['clihi', True, (31.52, 17.55), 1.8, 0.4],
+                            ['clihi', True, (13.61, 7.27), 1.8, 0.4],
+                            ['clihi', True, (1.75, 17.56), 1.8, 0.4]
+                        ]
+                        sprites = Sprites(list_of_objects)
+                        sprites2 = Sprites(list_of_objects)
                         MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
                                       (29, 15), (30, 6)]
                         cl_pos = [(31, 17), (13, 7), (1, 17)]
