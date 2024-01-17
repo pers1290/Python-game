@@ -1041,6 +1041,7 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     FLAG_13 = False
                     FLAG_10 = True
+            LIFE1 = 3 + dop_life
             st_text = f.render('ВЫ ПРОИГРАЛИ', 0, (255, 0, 0))
             sc.blit(st_text, (190, 300))
             if x != 0 and y != 0:
