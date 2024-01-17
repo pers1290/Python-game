@@ -14,8 +14,7 @@ TILE = 100
 FPS_POS = (WIDTH - 65, 5)
 SENSETIV = 0.003
 TIME_POS = (10, 10)
-LIFE1 = 3
-LIFE2 = 3
+LIFE1 = 1
 LIFE_POS = (10, 40)
 
 # текстуры
@@ -602,8 +601,10 @@ def main():
     FLAG_10 = False
     FLAG_11 = False
     FLAG_12 = False
+    FLAG_13 = False
     FLAG_22 = False
     lvl_life = 1
+    dop_life = 0
     lvl1 = True
     lvl2 = False
     t1 = False
@@ -617,7 +618,6 @@ def main():
     global MOMEY_MINI
     global clic
     global LIFE1
-    global LIFE2
     global CL
     k = 1
     x, y = 0, 0
@@ -999,20 +999,54 @@ def main():
             minut = 0
             LVL = 2
             FLAG_12 = False
-            if lvl_life == 1:
-                LIFE1 -= 1
-                player.x, player.y = player_pos
-                sprites.list_of_objects[0].x, sprites.list_of_objects[0].y = 1350, 1150
-                sprites.list_of_objects[-1].x, sprites.list_of_objects[-1].y = 1450, 1050
-                FLAG_4 = True
+            if LIFE1 > 1:
+                if lvl_life == 1:
+                    LIFE1 -= 1
+                    player.x, player.y = player_pos
+                    sprites.list_of_objects[0].x, sprites.list_of_objects[0].y = 1350, 1150
+                    sprites.list_of_objects[-1].x, sprites.list_of_objects[-1].y = 1450, 1050
+                    FLAG_4 = True
+                else:
+                    LIFE1 -= 1
+                    player2.x, player2.y = player_pos
+                    sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y = 1350, 1150
+                    sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y = 1450, 1050
+                    FLAG_7 = True
             else:
-                LIFE2 -=1
-                player2.x, player2.y = player_pos
-                sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y = 1350, 1150
-                sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y = 1450, 1050
-                FLAG_7 = True
+                FLAG_13 = True
             video = moviepy.editor.VideoFileClip("data/vidos.mp4")
             video.preview()
+
+        if FLAG_13:
+            sc.fill((0, 0, 0))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                if vol < 0:
+                    vol = 0.0
+                if vol > 1:
+                    vol = 1.0
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit()
+                    if event.key == pygame.K_DOWN:
+                        vol -= 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                    if event.key == pygame.K_UP:
+                        vol += 0.1
+                        pygame.mixer.Channel(0).set_volume(vol)
+                if event.type == pygame.MOUSEMOTION:
+                    sc.blit(image, event.pos)
+                    x, y = event.pos
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    FLAG_13 = False
+                    FLAG_10 = True
+            st_text = f.render('ВЫ ПРОИГРАЛИ', 0, (255, 0, 0))
+            sc.blit(st_text, (190, 300))
+            if x != 0 and y != 0:
+                sc.blit(image, (x, y))
+
+            pygame.display.flip()
 
         # результат прохождения первого уровня
         if FLAG_5:
@@ -1446,6 +1480,7 @@ def main():
                         if A >= 6:
                             A -= 6
                             LIFE1 += 1
+                            dop_life += 1
                             t1 = True
                         else:
                             t2 = True
