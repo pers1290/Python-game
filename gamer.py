@@ -935,6 +935,7 @@ def main():
             sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y = 3150, 1750
             video = moviepy.editor.VideoFileClip("data/vidos.mp4")
             video.preview()
+            pygame.mixer.Channel(0).play(pygame.mixer.Sound("data/music2.mp3"), -1)
         if FLAG_13:
             sc.fill((0, 0, 0))
             for event in pygame.event.get():
