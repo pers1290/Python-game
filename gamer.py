@@ -1000,18 +1000,18 @@ def main():
             if LIFE1 > 1:
                 if lvl_life == 1:
                     LIFE1 -= 1
-                    player.x, player.y = player_pos
-                    sprites.list_of_objects[0].x, sprites.list_of_objects[0].y = 150, 1750
-                    sprites.list_of_objects[-1].x, sprites.list_of_objects[-1].y = 3150, 1750
                     FLAG_4 = True
                 else:
                     LIFE1 -= 1
-                    player2.x, player2.y = player_pos
-                    sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y = 150, 1750
-                    sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y = 3150, 1750
                     FLAG_7 = True
             else:
                 FLAG_13 = True
+            player.x, player.y = player_pos
+            sprites.list_of_objects[0].x, sprites.list_of_objects[0].y = 150, 1750
+            sprites.list_of_objects[-1].x, sprites.list_of_objects[-1].y = 3150, 1750
+            player2.x, player2.y = player_pos
+            sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y = 150, 1750
+            sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y = 3150, 1750
             video = moviepy.editor.VideoFileClip("data/vidos.mp4")
             video.preview()
 
@@ -1040,8 +1040,6 @@ def main():
                     FLAG_13 = False
                     FLAG_10 = True
                     cl_pos = [(31, 17), (13, 7)]
-                    player.x, player.y = player_pos
-                    player2.x, player2.y = player_pos
             LIFE1 = 3 + dop_life
             st_text = f.render('ВЫ ПРОИГРАЛИ', 0, (255, 0, 0))
             sc.blit(st_text, (190, 300))
