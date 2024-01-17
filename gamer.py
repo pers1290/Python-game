@@ -48,7 +48,7 @@ FAKE_RAYS = 100
 
 MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
               (29, 15), (30, 6)]
-A = 10
+A = 0
 ANGLE = 0
 LVL = 1
 starttime = 0
@@ -516,8 +516,8 @@ def main():
         ['clihi', True, (1.75, 17.56), 1.8, 0.4]
     ]
     user_text = ''
-    posis = [(), (2, 1), (5, 13), (3, 15), (11, 16), (20, 17), (30, 6), (13, 1), (23, 3), (29, 15), (6, 2), (20, 11),
-             (31, 17), (13, 7), (1, 17)]
+    posis = [(), (2, 1), (5, 13), (3, 15), (11, 16), (20, 17), (30, 6), (13, 1), (23, 3), (29, 15), (6, 2), (20, 11)]
+    cl_pos = [(31, 17), (13, 7), (1, 17)]
 
     pygame.init()
     sc = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -580,7 +580,6 @@ def main():
             df = round(sum(fg) / len(fg))
         else:
             df = 0
-    # pygame.mixer.Channel(2).set_volume(0.5)
 
     FLAG_1 = True
     FLAG_2 = False
@@ -606,7 +605,7 @@ def main():
     global MOMEY_MINI
     global clic
     global LIFE1
-    global  CL
+    global CL
     k = 1
     x, y = 0, 0
     bestminut = 0
@@ -1077,16 +1076,12 @@ def main():
 
             if (x_new, y_new) in posis:
                 s = posis.index((x_new, y_new))
-                if s == 12:
-                    CL += 1
-                    del posis[12]
-                if s == 13:
-                    CL += 1
-                    del posis[13]
-                if s == 14:
-                    del posis[14]
-                    CL += 1
                 sprites.list_of_objects[s] = 1
+            if (x_new, y_new) in cl_pos:
+                sq = cl_pos.index((x_new, y_new))
+                sprites.list_of_objects[sq + 12] = 1
+                CL += 1
+                cl_pos[sq] = False
 
             if x_new == 13 and y_new == 14 and CL == 3:
                 FLAG_4 = False
@@ -1096,7 +1091,6 @@ def main():
                 timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
                 CL = 0
                 LVL = 2
-
 
         if FLAG_5:
             sc.fill((0, 0, 0))
@@ -1259,8 +1253,6 @@ def main():
             player2.movement()
             sc.fill((0, 0, 0))
 
-            print(player2.x / TILE, player2.y / TILE)
-
             x_new = int(player2.x / TILE)
             y_new = int(player2.y / TILE)
 
@@ -1284,16 +1276,12 @@ def main():
 
             if (x_new, y_new) in posis:
                 s = posis.index((x_new, y_new))
-                sprites.list_of_objects[s] = 1
-                if s == 12:
-                    CL += 1
-                    del posis[12]
-                if s == 13:
-                    CL += 1
-                    del posis[13]
-                if s == 14:
-                    CL += 1
-                    del posis[14]
+                sprites2.list_of_objects[s] = 1
+            if (x_new, y_new) in cl_pos:
+                sq = cl_pos.index((x_new, y_new))
+                sprites2.list_of_objects[sq + 12] = 1
+                CL += 1
+                cl_pos[sq] = False
 
             if x_new == 13 and y_new == 14 and CL == 3:
                 FLAG_7 = False
@@ -1431,18 +1419,27 @@ def main():
                     if x <= 1111 and x >= 938 and y <= 1000 and y >= 700:
                         MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
                                       (29, 15), (30, 6)]
-                        posis = [(), (2, 1), (5, 13), (3, 15), (11, 16), (20, 17), (30, 6), (13, 1), (23, 3), (29, 15),
-                                 (6, 2), (20, 11),
-                                 (31, 17), (13, 7), (1, 17)]
+                        cl_pos = [(31, 17), (13, 7), (1, 17)]
                         with open('star.txt', 'a', encoding="utf-8") as jh:
                             if g > 0:
                                 jh.write(f'{str(g)}')
-                        A = 10
+                        with open('star.txt', 'r', encoding="utf-8") as d:
+                            fd = ''.join(d.readlines())
+                            if len(fd) > 0:
+                                fg = []
+                                for z in fd:
+                                    fg.append(int(z))
+                                df = round(sum(fg) / len(fg))
+                            else:
+                                df = 0
+                        CL = 0
                         g = 0
                         true = True
                         drav2 = False
                         FLAG_9 = False
                         FLAG_10 = True
+                        t1 = False
+                        t2 = False
             if drav2:
                 for j in sd[:g]:
                     sc.blit(star_01, j)
