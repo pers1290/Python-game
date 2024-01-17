@@ -403,7 +403,7 @@ class Drawing:
             rot_coin = pygame.transform.scale(rot_coin, (abs(new_width), coin_rect.height))
             self.sc_map.blit(rot_coin, rot_coin.get_rect(center=(i[0] * g * 8 + jk, i[1] * g * 8 + jk)))
         self.sc.blit(self.sc_map, MAP_POS)
-        a2 = 3
+        a2 = 2
         myfont = pygame.font.Font("data/shrift.ttf", 24)
         text = f'Собрано: {CL} из {a2}'
         rend = myfont.render(text, 0, (50, 0, 0))
@@ -520,12 +520,11 @@ def main():
         ['money', True, (6.60, 2.57), 1.8, 0.4],
         ['money', True, (20.60, 11.60), 1.8, 0.4],
         ['clihi', True, (31.52, 17.55), 1.8, 0.4],
-        ['clihi', True, (13.61, 7.27), 1.8, 0.4],
-        ['clihi', True, (1.75, 17.56), 1.8, 0.4]
+        ['clihi', True, (13.61, 7.27), 1.8, 0.4]
     ]
     user_text = ''
     posis = [(), (2, 1), (5, 13), (3, 15), (11, 16), (20, 17), (30, 6), (13, 1), (23, 3), (29, 15), (6, 2), (20, 11)]
-    cl_pos = [(31, 17), (13, 7), (1, 17)]
+    cl_pos = [(31, 17), (13, 7)]
 
     # инициализация pygame
     pygame.init()
@@ -971,7 +970,7 @@ def main():
                 CL += 1
                 cl_pos[sq] = False
 
-            if x_new == 13 and y_new == 14 and CL == 3:
+            if x_new == 13 and y_new == 14 and CL == 2:
                 FLAG_4 = False
                 minut = 0
                 bestminut = 0
@@ -995,7 +994,6 @@ def main():
                 if event.type == pygame.QUIT:
                     exit()
             timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
-            CL = 0
             minut = 0
             LVL = 2
             FLAG_12 = False
@@ -1041,6 +1039,7 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     FLAG_13 = False
                     FLAG_10 = True
+                    cl_pos = [(31, 17), (13, 7)]
             LIFE1 = 3 + dop_life
             st_text = f.render('ВЫ ПРОИГРАЛИ', 0, (255, 0, 0))
             sc.blit(st_text, (190, 300))
@@ -1062,7 +1061,7 @@ def main():
                     cur.execute(f'''UPDATE game_db
                     SET lvl1 = {timelvl1}
                     WHERE name = "{user_text}"''')
-            elif int(result[0][0]) > timelvl1:
+            elif int(result[0][0]) > int(timelvl1):
                 with con:
                     cur.execute(f'''UPDATE game_db
                     SET lvl1 = {timelvl1}
@@ -1240,7 +1239,7 @@ def main():
                 pygame.mixer.Channel(1).set_volume(0.3)
                 cl_pos[sq] = False
 
-            if x_new == 13 and y_new == 14 and CL == 3:
+            if x_new == 13 and y_new == 14 and CL == 2:
                 FLAG_7 = False
                 minut = 0
                 FLAG_8 = True
@@ -1391,14 +1390,13 @@ def main():
                             ['money', True, (6.60, 2.57), 1.8, 0.4],
                             ['money', True, (20.60, 11.60), 1.8, 0.4],
                             ['clihi', True, (31.52, 17.55), 1.8, 0.4],
-                            ['clihi', True, (13.61, 7.27), 1.8, 0.4],
-                            ['clihi', True, (1.75, 17.56), 1.8, 0.4]
+                            ['clihi', True, (13.61, 7.27), 1.8, 0.4]
                         ]
                         sprites = Sprites(list_of_objects)
                         sprites2 = Sprites(list_of_objects)
                         MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
                                       (29, 15), (30, 6)]
-                        cl_pos = [(31, 17), (13, 7), (1, 17)]
+                        cl_pos = [(31, 17), (13, 7)]
                         with open('star.txt', 'a', encoding="utf-8") as jh:
                             if g > 0:
                                 jh.write(f'{str(g)}')
@@ -1419,6 +1417,7 @@ def main():
                         FLAG_10 = True
                         t1 = False
                         t2 = False
+                        LIFE1 = 3
             if drav2:
                 for j in sd[:g]:
                     sc.blit(star_01, j)
