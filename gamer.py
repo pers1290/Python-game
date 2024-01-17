@@ -1040,6 +1040,8 @@ def main():
                     FLAG_13 = False
                     FLAG_10 = True
                     cl_pos = [(31, 17), (13, 7)]
+                    player.x, player.y = player_pos
+                    player2.x, player2.y = player_pos
             LIFE1 = 3 + dop_life
             st_text = f.render('ВЫ ПРОИГРАЛИ', 0, (255, 0, 0))
             sc.blit(st_text, (190, 300))
