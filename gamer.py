@@ -1,5 +1,6 @@
 import pygame
 import math
+import moviepy.editor
 
 import sqlite3
 
@@ -592,6 +593,7 @@ def main():
     FLAG_9 = False
     FLAG_10 = False
     FLAG_11 = False
+    FLAG_12 = False
     FLAG_22 = False
     lvl1 = True
     lvl2 = False
@@ -1066,6 +1068,28 @@ def main():
                 CL = 0
                 LVL = 2
 
+            if abs(sprites.list_of_objects[0].x - player.x) <= 70 and abs(sprites.list_of_objects[0].y - player.y) <= 70:
+                FLAG_12 = True
+                FLAG_4 = False
+
+            if abs(sprites.list_of_objects[-1].x - player.x) <= 70 and abs(sprites.list_of_objects[-1].y - player.y) <= 70:
+                FLAG_12 = True
+                FLAG_4 = False
+
+        if FLAG_12:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                elif event.type == ENEMY_EVENT_TYPE:
+                    timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
+                    CL = 0
+                    minut = 0
+                    LVL = 2
+                    FLAG_12 = False
+                    FLAG_5 = True
+            video = moviepy.editor.VideoFileClip("data/vidos.mp4")
+            video.preview()
+
         if FLAG_5:
             sc.fill((0, 0, 0))
             a = 'game.db'
@@ -1266,6 +1290,13 @@ def main():
                 FLAG_8 = True
                 timelvl2 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
                 CL = 0
+
+            if abs(sprites2.list_of_objects[0].x - player2.x) <= 100 and abs(sprites2.list_of_objects[0].y - player2.y) <= 100:
+                FLAG_7 = False
+                FLAG_12 = True
+            if abs(sprites2.list_of_objects[-1].x - player2.x) <= 100 and abs(sprites2.list_of_objects[-1].y - player2.y) <= 100:
+                FLAG_7 = False
+                FLAG_12 = True
 
         if FLAG_8:
             sc.fill((0, 0, 0))
