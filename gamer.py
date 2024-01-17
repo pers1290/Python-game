@@ -14,7 +14,7 @@ TILE = 100
 FPS_POS = (WIDTH - 65, 5)
 SENSETIV = 0.003
 TIME_POS = (10, 10)
-LIFE1 = 1
+LIFE1 = 3
 LIFE_POS = (10, 40)
 
 # текстуры
