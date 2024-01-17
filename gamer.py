@@ -970,6 +970,9 @@ def main():
                 CL += 1
                 cl_pos[sq] = False
 
+            if CL == 2:
+                LIFE1 = 1
+
             if x_new == 13 and y_new == 14 and CL == 2:
                 FLAG_4 = False
                 minut = 0
@@ -994,6 +997,7 @@ def main():
                 if event.type == pygame.QUIT:
                     exit()
             timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
+            CL = 0
             minut = 0
             LVL = 2
             FLAG_12 = False
@@ -1204,6 +1208,9 @@ def main():
                     sprites2.list_of_objects[-1].y += 5
                 elif next_pos2_2[1] < sprites2.list_of_objects[-1].y:
                     sprites2.list_of_objects[-1].y -= 5
+
+            if CL == 2:
+                LIFE1 = 1
 
             player2.movement()
             sc.fill((0, 0, 0))
