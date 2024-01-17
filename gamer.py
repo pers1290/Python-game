@@ -1012,6 +1012,7 @@ def main():
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
             pygame.display.flip()
+        print(CL)
         # результат прохождения первого уровня
         if FLAG_5:
             sc.fill((0, 0, 0))
