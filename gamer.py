@@ -1,5 +1,6 @@
 import pygame
 import math
+import moviepy.editor
 
 import sqlite3
 
@@ -56,7 +57,7 @@ g = 0
 clic = 0
 CL = 0
 
-# скорость игрока
+
 def player_speed():
     global clic
     keys = pygame.key.get_pressed()
@@ -66,7 +67,7 @@ def player_speed():
         return 5 + (clic * 1.15)
 
 
-# карта № 1
+# карта
 _ = False
 text_map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1],
@@ -90,7 +91,7 @@ text_map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1]
 
 ]
-# карта № 2
+
 text_map2 = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1],
     [1, _, _, _, _, _, 1, 1, _, _, 1, _, 1, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 1],
@@ -113,7 +114,7 @@ text_map2 = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1]
 
 ]
-# загрузка карты № 1
+
 WORLD_WIDTH = len(text_map[0]) * TILE
 WORLD_HEIGHT = len(text_map[0]) * TILE
 world_map = {}
@@ -143,7 +144,6 @@ for j, row in enumerate(text_map):
             elif char == 9:
                 world_map[(i * TILE, j * TILE)] = 9
 
-# загрузка карты № 2
 WORLD_WIDTH = len(text_map[0]) * TILE
 WORLD_HEIGHT = len(text_map[0]) * TILE
 world_map2 = {}
@@ -177,7 +177,7 @@ for j, row in enumerate(text_map2):
 def mapping(a, b):
     return (a // TILE) * TILE, (b // TILE) * TILE
 
-# класс игрока
+
 class Player:
     def __init__(self, walls):
         self.walls = walls
@@ -230,7 +230,6 @@ class Player:
             pygame.mouse.set_pos((WIDTH // 2, HEIGHT // 2))
             self.angle += diff * SENSETIV
 
-    # функция изменения местоположения игрока
     def keys(self):
         sin_a = math.sin(self.angle)
         cos_a = math.cos(self.angle)
@@ -260,7 +259,7 @@ class Player:
 
         self.angle %= DOUBLE_PI
 
-# класс отрисовки игры
+
 class Drawing:
     def __init__(self, sc, sc_map):
         self.sc = sc
@@ -282,14 +281,12 @@ class Drawing:
         pygame.draw.rect(self.sc, (40, 10, 0), (0, HEIGHT / 2, WIDTH, HEIGHT / 2))
         pygame.draw.rect(self.sc, (20, 20, 20), (0, 0, WIDTH, HEIGHT / 2))
 
-    # отрисовка спрайтов
     def world(self, world_objects):
         for obj in sorted(world_objects, key=lambda n: n[0], reverse=True):
             if obj[0]:
                 _, object, object_pos = obj
                 self.sc.blit(object, object_pos)
 
-    # функция отрисовки стен карты
     def ray_casting(self, player_pos, player_angle, world_map):
         val = []
         texture_v = 1
@@ -350,7 +347,6 @@ class Drawing:
         rend = self.font.render(d_fps, 0, (0, 150, 0))
         self.sc.blit(rend, FPS_POS)
 
-    # время прохождения
     def time(self):
         time = int((pygame.time.get_ticks() // 1000)) - int(starttime)
         minut = 0
@@ -364,14 +360,12 @@ class Drawing:
         rend = myfont.render(d_time, 0, (0, 150, 0))
         self.sc.blit(rend, TIME_POS)
 
-    # количество жизней
     def life(self):
         d_life = f'Осталось {LIFE1} жизни'
         myfont = pygame.font.Font("data/shrift.ttf", 24)
         rend = myfont.render(d_life, 0, (0, 150, 0))
         self.sc.blit(rend, LIFE_POS)
 
-    # отрисовка мини карты
     def mini_map(self, player, mini_map, money_pos):
         global A
         global CL
@@ -408,7 +402,7 @@ class Drawing:
         rend = myfont.render(text, 0, (50, 0, 0))
         self.sc.blit(rend, (30, HEIGHT - 65))
 
-# класс для загрузки спрайтов
+
 class Sprites:
     def __init__(self, sprite):
         self.sprite = sprite
@@ -421,7 +415,7 @@ class Sprites:
             self.list_of_objects.append(SpriteObject(self.sprite_types[i[0]], i[1], i[2], i[3], i[4]))
         self.list_of_objects.append(SpriteObject(self.sprite_types['sirenhead'], True, (14.50, 10.50), 0.5, 0.8))
 
-# класс для проверки попадания спрайтов в поле видимости игрока
+
 class SpriteObject:
     def __init__(self, object, static, pos, shift, scale):
         self.object = object
@@ -463,7 +457,7 @@ class SpriteObject:
         else:
             return (False,)
 
-# класс с логикой врага
+
 class Interaction:
     def __init__(self, player, sprites, drawing, walls, obj, text_map):
         self.player = player
@@ -504,7 +498,7 @@ class Interaction:
         return self.find_path_step((round(self.obj.x // 100), round(self.obj.y // 100)),
                                    (round(self.player.x // 100), round(self.player.y // 100)))
 
-# функция, где прописана логика игры
+
 def main():
     list_of_objects = [
         ['money', True, (2.28, 1.67), 1.8, 0.4],
@@ -526,7 +520,6 @@ def main():
     posis = [(), (2, 1), (5, 13), (3, 15), (11, 16), (20, 17), (30, 6), (13, 1), (23, 3), (29, 15), (6, 2), (20, 11)]
     cl_pos = [(31, 17), (13, 7), (1, 17)]
 
-    # инициализация pygame
     pygame.init()
     sc = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption('DARK MAZE')
@@ -553,6 +546,7 @@ def main():
     f = pygame.font.Font("data/shrift.ttf", 130)
     pygame.mixer.music.load("data/music2.mp3")
     pygame.mixer.Channel(0).play(pygame.mixer.Sound("data/music2.mp3"), -1)
+    # pygame.mixer.Channel(2).play(pygame.mixer.Sound("data/priexal.mp3"))
     vol = 0.5
     pygame.mixer.Channel(0).set_volume(vol)
     fon = pygame.image.load('data/meny.png').convert()
@@ -599,6 +593,7 @@ def main():
     FLAG_9 = False
     FLAG_10 = False
     FLAG_11 = False
+    FLAG_12 = False
     FLAG_22 = False
     lvl1 = True
     lvl2 = False
@@ -618,9 +613,7 @@ def main():
     x, y = 0, 0
     bestminut = 0
 
-    # основной цикл
     while True:
-        # главное окно
         if FLAG_1:
             sc.blit(fom, (0, 0))
             for event in pygame.event.get():
@@ -636,9 +629,11 @@ def main():
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                     if event.key == pygame.K_UP:
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     if x <= 678 and x >= 523 and y <= 418 and y >= 275:
@@ -657,7 +652,6 @@ def main():
                 sc.blit(image, (x, y))
             pygame.display.flip()
 
-        # меню
         if FLAG_10:
 
             sc.blit(fom, (0, 0))
@@ -674,9 +668,11 @@ def main():
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                     if event.key == pygame.K_UP:
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     if x <= 60 and x >= 10 and y <= 60 and y >= 10:
@@ -743,7 +739,6 @@ def main():
             interaction2_2 = Interaction(player2, sprites2, drawing, walls2, sprites2.list_of_objects[-1], text_map2)
             pygame.display.flip()
 
-        # заставка первого уровня
         if FLAG_11:
             sc.fill((0, 0, 0))
             for event in pygame.event.get():
@@ -759,9 +754,11 @@ def main():
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                     if event.key == pygame.K_UP:
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEMOTION:
                     sc.blit(image, event.pos)
                     x, y = event.pos
@@ -776,7 +773,6 @@ def main():
 
             pygame.display.flip()
 
-        # правила игры
         if FLAG_2:
             sc.blit(fom2, (0, 0))
             for event in pygame.event.get():
@@ -792,9 +788,11 @@ def main():
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                     if event.key == pygame.K_UP:
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     if x <= 1187 and x >= 1068 and y <= 124 and y >= 8:
@@ -814,7 +812,6 @@ def main():
                 sc.blit(image, (x, y))
             pygame.display.flip()
 
-        # вход в аккаунт
         if FLAG_3:
             sc.blit(fom3, (0, 0))
             for event in pygame.event.get():
@@ -831,9 +828,11 @@ def main():
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                     if event.key == pygame.K_UP:
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     if x <= 678 and x >= 523 and y <= 418 and y >= 275:
@@ -868,9 +867,99 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_BACKSPACE:
                         user_text = user_text[:-1]
-                    elif len(user_text) < 7:
-                        sim = event.unicode
-                        user_text += sim
+                    if len(user_text) < 7:
+                        if event.key == pygame.K_a:
+                            user_text += 'a'
+                        if event.key == pygame.K_b:
+                            user_text += 'b'
+                        if event.key == pygame.K_c:
+                            user_text += 'c'
+                        if event.key == pygame.K_d:
+                            user_text += 'd'
+                        if event.key == pygame.K_e:
+                            user_text += 'e'
+                        if event.key == pygame.K_f:
+                            user_text += 'f'
+                        if event.key == pygame.K_g:
+                            user_text += 'g'
+                        if event.key == pygame.K_h:
+                            user_text += 'h'
+                        if event.key == pygame.K_i:
+                            user_text += 'i'
+                        if event.key == pygame.K_j:
+                            user_text += 'j'
+                        if event.key == pygame.K_k:
+                            user_text += 'k'
+                        if event.key == pygame.K_l:
+                            user_text += 'l'
+                        if event.key == pygame.K_m:
+                            user_text += 'm'
+                        if event.key == pygame.K_n:
+                            user_text += 'n'
+                        if event.key == pygame.K_o:
+                            user_text += 'o'
+                        if event.key == pygame.K_p:
+                            user_text += 'p'
+                        if event.key == pygame.K_q:
+                            user_text += 'q'
+                        if event.key == pygame.K_r:
+                            user_text += 'r'
+                        if event.key == pygame.K_s:
+                            user_text += 's'
+                        if event.key == pygame.K_t:
+                            user_text += 't'
+                        if event.key == pygame.K_u:
+                            user_text += 'u'
+                        if event.key == pygame.K_v:
+                            user_text += 'v'
+                        if event.key == pygame.K_w:
+                            user_text += 'w'
+                        if event.key == pygame.K_x:
+                            user_text += 'x'
+                        if event.key == pygame.K_y:
+                            user_text += 'y'
+                        if event.key == pygame.K_z:
+                            user_text += 'z'
+                        if event.key == pygame.K_KP0:
+                            user_text += '0'
+                        if event.key == pygame.K_KP1:
+                            user_text += '1'
+                        if event.key == pygame.K_KP2:
+                            user_text += '2'
+                        if event.key == pygame.K_KP3:
+                            user_text += '3'
+                        if event.key == pygame.K_KP4:
+                            user_text += '4'
+                        if event.key == pygame.K_KP5:
+                            user_text += '5'
+                        if event.key == pygame.K_KP6:
+                            user_text += '6'
+                        if event.key == pygame.K_KP7:
+                            user_text += '7'
+                        if event.key == pygame.K_KP8:
+                            user_text += '8'
+                        if event.key == pygame.K_KP9:
+                            user_text += '9'
+                        if event.key == pygame.K_0:
+                            user_text += '0'
+                        if event.key == pygame.K_1:
+                            user_text += '1'
+                        if event.key == pygame.K_2:
+                            user_text += '2'
+                        if event.key == pygame.K_3:
+                            user_text += '3'
+                        if event.key == pygame.K_4:
+                            user_text += '4'
+                        if event.key == pygame.K_5:
+                            user_text += '5'
+                        if event.key == pygame.K_6:
+                            user_text += '6'
+                        if event.key == pygame.K_7:
+                            user_text += '7'
+                        if event.key == pygame.K_8:
+                            user_text += '8'
+                        if event.key == pygame.K_9:
+                            user_text += '9'
 
             d_name = f'Введите своё имя'
             myfont = pygame.font.Font("data/shrift.ttf", 50)
@@ -883,8 +972,9 @@ def main():
                 sc.blit(image, (x, y))
             pygame.display.flip()
 
-        # первый уровень
         if FLAG_4:
+            # per = schedule.every(1).seconds.do(time)
+            # schedule.cancel_job(per)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
@@ -896,9 +986,11 @@ def main():
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                     if event.key == pygame.K_UP:
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
 
                 elif event.type == ENEMY_EVENT_TYPE:
                     next_pos = interaction.npc_move()
@@ -930,6 +1022,8 @@ def main():
 
             player.movement()
             sc.fill((0, 0, 0))
+
+            # print(player.pos()[0] / TILE, player.pos()[1] / TILE)
 
             x_new = int(player.x / TILE)
             y_new = int(player.y / TILE)
@@ -974,7 +1068,28 @@ def main():
                 CL = 0
                 LVL = 2
 
-        # результат прохождения первого уровня
+            if abs(sprites.list_of_objects[0].x - player.x) <= 70 and abs(sprites.list_of_objects[0].y - player.y) <= 70:
+                FLAG_12 = True
+                FLAG_4 = False
+
+            if abs(sprites.list_of_objects[-1].x - player.x) <= 70 and abs(sprites.list_of_objects[-1].y - player.y) <= 70:
+                FLAG_12 = True
+                FLAG_4 = False
+
+        if FLAG_12:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                elif event.type == ENEMY_EVENT_TYPE:
+                    timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
+                    CL = 0
+                    minut = 0
+                    LVL = 2
+                    FLAG_12 = False
+                    FLAG_5 = True
+            video = moviepy.editor.VideoFileClip("data/vidos.mp4")
+            video.preview()
+
         if FLAG_5:
             sc.fill((0, 0, 0))
             a = 'game.db'
@@ -1000,6 +1115,7 @@ def main():
                     sp.append(element[0])
             best = min(sp)
             bestname = cur.execute(f"""SELECT name FROM game_db WHERE lvl1 = {best}""").fetchall()
+            # print(best, bestname[0][0])
             con.close()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -1014,9 +1130,11 @@ def main():
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                     if event.key == pygame.K_UP:
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEMOTION:
                     sc.blit(image, event.pos)
                     x, y = event.pos
@@ -1049,7 +1167,6 @@ def main():
                 sc.blit(image, (x, y))
             pygame.display.flip()
 
-        # заставка второго уровня
         if FLAG_6:
             sc.fill((0, 0, 0))
             for event in pygame.event.get():
@@ -1065,9 +1182,11 @@ def main():
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                     if event.key == pygame.K_UP:
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEMOTION:
                     sc.blit(image, event.pos)
                     x, y = event.pos
@@ -1082,7 +1201,6 @@ def main():
 
             pygame.display.flip()
 
-        # второй уровень
         if FLAG_7:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -1096,9 +1214,11 @@ def main():
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                     if event.key == pygame.K_UP:
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
 
                 elif event.type == ENEMY_EVENT_TYPE:
                     next_pos_2 = interaction_2.npc_move()
@@ -1171,7 +1291,13 @@ def main():
                 timelvl2 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
                 CL = 0
 
-        # результат прохождения второго уровня
+            if abs(sprites2.list_of_objects[0].x - player2.x) <= 100 and abs(sprites2.list_of_objects[0].y - player2.y) <= 100:
+                FLAG_7 = False
+                FLAG_12 = True
+            if abs(sprites2.list_of_objects[-1].x - player2.x) <= 100 and abs(sprites2.list_of_objects[-1].y - player2.y) <= 100:
+                FLAG_7 = False
+                FLAG_12 = True
+
         if FLAG_8:
             sc.fill((0, 0, 0))
             a = 'game.db'
@@ -1197,6 +1323,7 @@ def main():
                     sp.append(element[0])
             best = min(sp)
             bestname = cur.execute(f"""SELECT name FROM game_db WHERE lvl2 = {best}""").fetchall()
+            # print(best, bestname[0][0])
             con.close()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -1211,9 +1338,11 @@ def main():
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                     if event.key == pygame.K_UP:
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEMOTION:
                     sc.blit(image, event.pos)
                     x, y = event.pos
@@ -1242,7 +1371,6 @@ def main():
 
             pygame.display.flip()
 
-        # конечное окно
         if FLAG_9:
             sc.fill((0, 0, 0))
             for i in sd:
@@ -1266,9 +1394,11 @@ def main():
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                     if event.key == pygame.K_UP:
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEMOTION:
                     sc.blit(image, event.pos)
                     x, y = event.pos
@@ -1362,7 +1492,6 @@ def main():
 
             pygame.display.flip()
 
-        # магазин
         if FLAG_22:
             sc.fill((0, 0, 0))
             for event in pygame.event.get():
@@ -1378,9 +1507,11 @@ def main():
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                     if event.key == pygame.K_UP:
                         vol += 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
+                        # print(pygame.mixer.music.get_volume())
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     if x <= 1111 and x >= 938 and y <= 1000 and y >= 700:
@@ -1435,8 +1566,6 @@ def main():
             sc.blit(buy4, (805, 480))
             sc.blit(z2, (250, 400))
             sc.blit(z4, (790, 400))
-            pygame.draw.rect(sc, (0, 255, 0), (140, 340, 412, 115), width=3)
-            pygame.draw.rect(sc, (0, 255, 0), (740, 340, 268, 115), width=3)
             if t1:
                 w1 = pygame.font.Font("data/shrift.ttf", 24)
                 w2 = w1.render('ПОКУПКА СОВЕРШЕНА', 0, (0, 200, 0))
@@ -1450,6 +1579,6 @@ def main():
                 sc.blit(image, (x, y))
             pygame.display.flip()
 
-# запуск игры
+
 if __name__ == '__main__':
     main()
