@@ -15,6 +15,7 @@ FPS_POS = (WIDTH - 65, 5)
 SENSETIV = 0.003
 TIME_POS = (10, 10)
 LIFE1 = 3
+LIFE2 = 3
 LIFE_POS = (10, 40)
 
 # текстуры
@@ -602,6 +603,7 @@ def main():
     FLAG_11 = False
     FLAG_12 = False
     FLAG_22 = False
+    lvl_life = 1
     lvl1 = True
     lvl2 = False
     t1 = False
@@ -615,6 +617,7 @@ def main():
     global MOMEY_MINI
     global clic
     global LIFE1
+    global LIFE2
     global CL
     k = 1
     x, y = 0, 0
@@ -887,6 +890,7 @@ def main():
 
         # первый уровень
         if FLAG_4:
+            lvl_life = 1
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
@@ -990,13 +994,23 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
-                elif event.type == ENEMY_EVENT_TYPE:
-                    timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
-                    CL = 0
-                    minut = 0
-                    LVL = 2
-                    FLAG_12 = False
-                    FLAG_5 = True
+            timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
+            CL = 0
+            minut = 0
+            LVL = 2
+            FLAG_12 = False
+            if lvl_life == 1:
+                LIFE1 -= 1
+                player.x, player.y = player_pos
+                sprites.list_of_objects[0].x, sprites.list_of_objects[0].y = 1350, 1150
+                sprites.list_of_objects[-1].x, sprites.list_of_objects[-1].y = 1450, 1050
+                FLAG_4 = True
+            else:
+                LIFE2 -=1
+                player2.x, player2.y = player_pos
+                sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y = 1350, 1150
+                sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y = 1450, 1050
+                FLAG_7 = True
             video = moviepy.editor.VideoFileClip("data/vidos.mp4")
             video.preview()
 
@@ -1110,6 +1124,7 @@ def main():
 
         # второй уровень
         if FLAG_7:
+            lvl_life = 2
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
