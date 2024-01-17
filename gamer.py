@@ -2,6 +2,7 @@ import pygame
 import math
 import moviepy.editor
 import sqlite3
+
 # игровые настройки
 WIDTH = 1200
 HEIGHT = 800
@@ -14,10 +15,12 @@ SENSETIV = 0.003
 TIME_POS = (10, 10)
 LIFE1 = 3
 LIFE_POS = (10, 40)
+
 # текстуры
 TEXTURE_WIDTH = 1080
 TEXTURE_HEIGHT = 1080
 TEXTURE_SCALE = TEXTURE_HEIGHT // TILE
+
 # миникарта
 MINIMAP = 4
 MINIMAP_RES = (WIDTH // MINIMAP, HEIGHT // MINIMAP)
@@ -32,15 +35,18 @@ DELTA_ANGLE = FOV / NUM_RAYS
 DIST = NUM_RAYS / (2 * math.tan(FOV / 2))
 PROJ_COEFF = 3 * DIST * TILE
 SCALE = WIDTH // NUM_RAYS
+
 # игрок
 player_pos = (1351, 1451)
 player_angle = 300
+
 # спрайты
 DOUBLE_PI = 2 * math.pi
 CENTER_RAY = NUM_RAYS // 2 - 1
 FAKE_RAYS = 100
 MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
               (29, 15), (30, 6)]
+
 A = 0
 ANGLE = 0
 LVL = 1
@@ -48,6 +54,8 @@ starttime = 0
 g = 0
 clic = 0
 CL = 0
+
+
 # скорость игрока
 def player_speed():
     global clic
@@ -56,6 +64,8 @@ def player_speed():
         return 10 + (clic * 1.15)
     else:
         return 5 + (clic * 1.15)
+
+
 # карта № 1
 _ = False
 text_map = [
@@ -79,6 +89,7 @@ text_map = [
     [1, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 1, 1, _, _, 4, 3, _, _, _, _, _, _, _, _, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1]
 ]
+
 # карта № 2
 text_map2 = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1],
@@ -101,6 +112,7 @@ text_map2 = [
     [1, _, _, _, _, _, _, _, 9, 1, 1, _, _, _, _, _, _, _, 1, 1, _, _, 4, 3, _, _, _, _, _, _, _, _, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 5, 1]
 ]
+
 # загрузка карты № 1
 WORLD_WIDTH = len(text_map[0]) * TILE
 WORLD_HEIGHT = len(text_map[0]) * TILE
@@ -130,6 +142,7 @@ for j, row in enumerate(text_map):
                 world_map[(i * TILE, j * TILE)] = 8
             elif char == 9:
                 world_map[(i * TILE, j * TILE)] = 9
+
 # загрузка карты № 2
 WORLD_WIDTH = len(text_map[0]) * TILE
 WORLD_HEIGHT = len(text_map[0]) * TILE
@@ -159,8 +172,12 @@ for j, row in enumerate(text_map2):
                 world_map2[(i * TILE, j * TILE)] = 8
             elif char == 9:
                 world_map2[(i * TILE, j * TILE)] = 9
+
+
 def mapping(a, b):
     return (a // TILE) * TILE, (b // TILE) * TILE
+
+
 # класс игрока
 class Player:
     def __init__(self, walls):
@@ -169,9 +186,11 @@ class Player:
         self.angle = player_angle
         self.side = 50
         self.rect1 = pygame.Rect(*player_pos, self.side, self.side)
+
     @property
     def pos(self):
         return self.x, self.y
+
     def st(self, dx, dy):
         next_r = self.rect1.copy()
         next_r.move_ip(dx, dy)
@@ -198,15 +217,18 @@ class Player:
                 dx = 0
         self.x += dx
         self.y += dy
+
     def movement(self):
         self.keys()
         self.mouse()
         self.rect1.center = self.x, self.y
+
     def mouse(self):
         if pygame.mouse.get_focused():
             diff = pygame.mouse.get_pos()[0] - WIDTH // 2
             pygame.mouse.set_pos((WIDTH // 2, HEIGHT // 2))
             self.angle += diff * SENSETIV
+
     # функция изменения местоположения игрока
     def keys(self):
         sin_a = math.sin(self.angle)
@@ -235,6 +257,8 @@ class Player:
         if keys[pygame.K_RIGHT]:
             self.angle += 0.015
         self.angle %= DOUBLE_PI
+
+
 # класс отрисовки игры
 class Drawing:
     def __init__(self, sc, sc_map):
@@ -252,15 +276,18 @@ class Drawing:
                         9: pygame.image.load('data/e88.png').convert()
                         }
         global starttime
+
     def background(self):
         pygame.draw.rect(self.sc, (40, 10, 0), (0, HEIGHT / 2, WIDTH, HEIGHT / 2))
         pygame.draw.rect(self.sc, (20, 20, 20), (0, 0, WIDTH, HEIGHT / 2))
+
     # отрисовка спрайтов
     def world(self, world_objects):
         for obj in sorted(world_objects, key=lambda n: n[0], reverse=True):
             if obj[0]:
                 _, object, object_pos = obj
                 self.sc.blit(object, object_pos)
+
     # функция отрисовки стен карты
     def ray_casting(self, player_pos, player_angle, world_map):
         val = []
@@ -314,10 +341,12 @@ class Drawing:
             val.append((depth, wall_column, wall_pos))
             cur_angle += DELTA_ANGLE
         return val
+
     def fps(self, clock):
         d_fps = str(int(clock.get_fps()))
         rend = self.font.render(d_fps, 0, (0, 150, 0))
         self.sc.blit(rend, FPS_POS)
+
     # время прохождения
     def time(self):
         time = int((pygame.time.get_ticks() // 1000)) - int(starttime)
@@ -331,12 +360,14 @@ class Drawing:
         myfont = pygame.font.Font("data/shrift.ttf", 24)
         rend = myfont.render(d_time, 0, (0, 150, 0))
         self.sc.blit(rend, TIME_POS)
+
     # количество жизней
     def life(self):
         d_life = f'Осталось {LIFE1} жизни'
         myfont = pygame.font.Font("data/shrift.ttf", 24)
         rend = myfont.render(d_life, 0, (0, 150, 0))
         self.sc.blit(rend, LIFE_POS)
+
     # отрисовка мини карты
     def mini_map(self, player, mini_map, money_pos):
         global A
@@ -372,6 +403,8 @@ class Drawing:
         text = f'Собрано: {CL} из {a2}'
         rend = myfont.render(text, 0, (50, 0, 0))
         self.sc.blit(rend, (30, HEIGHT - 65))
+
+
 # класс для загрузки спрайтов
 class Sprites:
     def __init__(self, sprite):
@@ -383,6 +416,8 @@ class Sprites:
         for i in self.sprite:
             self.list_of_objects.append(SpriteObject(self.sprite_types[i[0]], i[1], i[2], i[3], i[4]))
         self.list_of_objects.append(SpriteObject(self.sprite_types['sirenhead'], True, (31.50, 17.50), 0.5, 0.8))
+
+
 # класс для проверки попадания спрайтов в поле видимости игрока
 class SpriteObject:
     def __init__(self, object, static, pos, shift, scale):
@@ -391,6 +426,7 @@ class SpriteObject:
         self.pas = self.x, self.y = pos[0] * TILE, pos[1] * TILE
         self.shift = shift
         self.scale = scale
+
     def object_locate(self, player, walls):
         fake_walls0 = [walls[0] for i in range(FAKE_RAYS)]
         fake_walls1 = [walls[-1] for i in range(FAKE_RAYS)]
@@ -417,6 +453,8 @@ class SpriteObject:
             return (distance_to_sprite, sprite, sprite_pos)
         else:
             return (False,)
+
+
 # класс с логикой врага
 class Interaction:
     def __init__(self, player, sprites, drawing, walls, obj, text_map):
@@ -428,6 +466,7 @@ class Interaction:
         self.side = 20
         self.rect_sirenhead = pygame.Rect(self.obj.x, self.obj.y, 20, 20)
         self.text_map = text_map
+
     def find_path_step(self, start, target):
         height = len(self.text_map)
         width = len(self.text_map[0])
@@ -452,9 +491,12 @@ class Interaction:
         while prev[y][x] != start:
             x, y = prev[y][x]
         return x * 100 + 50, y * 100 + 50
+
     def npc_move(self):
         return self.find_path_step((round(self.obj.x // 100), round(self.obj.y // 100)),
                                    (round(self.player.x // 100), round(self.player.y // 100)))
+
+
 # функция, где прописана логика игры
 def main():
     list_of_objects = [
@@ -634,9 +676,11 @@ def main():
                     if x <= 678 and x >= 523 and y <= 418 and y >= 275:
                         if lvl1:
                             FLAG_10 = False
+                            CL = 0
                             FLAG_11 = True
                         if lvl2:
                             FLAG_10 = False
+                            CL = 0
                             FLAG_6 = True
                     if x <= 1187 and x >= 1068 and y <= 124 and y >= 8:
                         FLAG_10 = False
@@ -914,7 +958,6 @@ def main():
                 if event.type == pygame.QUIT:
                     exit()
             timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
-            CL = 0
             minut = 0
             LVL = 2
             FLAG_12 = False
@@ -1155,10 +1198,12 @@ def main():
                 FLAG_8 = True
                 timelvl2 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
                 CL = 0
-            if abs(sprites2.list_of_objects[0].x - player2.x) <= 100 and abs(sprites2.list_of_objects[0].y - player2.y) <= 100:
+            if abs(sprites2.list_of_objects[0].x - player2.x) <= 100 and abs(
+                    sprites2.list_of_objects[0].y - player2.y) <= 100:
                 FLAG_7 = False
                 FLAG_12 = True
-            if abs(sprites2.list_of_objects[-1].x - player2.x) <= 100 and abs(sprites2.list_of_objects[-1].y - player2.y) <= 100:
+            if abs(sprites2.list_of_objects[-1].x - player2.x) <= 100 and abs(
+                    sprites2.list_of_objects[-1].y - player2.y) <= 100:
                 FLAG_7 = False
                 FLAG_12 = True
         # результат прохождения второго уровня
@@ -1431,6 +1476,8 @@ def main():
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
             pygame.display.flip()
+
+
 # запуск игры
 if __name__ == '__main__':
     main()
