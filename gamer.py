@@ -39,7 +39,7 @@ PROJ_COEFF = 3 * DIST * TILE
 SCALE = WIDTH // NUM_RAYS
 
 # игрок
-player_pos = (1351, 1451)
+player_pos = (1350, 1450)
 player_angle = 300
 
 # спрайты
@@ -417,10 +417,10 @@ class Sprites:
                              'sirenhead': pygame.image.load('data/lol.png').convert_alpha(),
                              'clihi': pygame.image.load('data/cl.png').convert_alpha()}
 
-        self.list_of_objects = [SpriteObject(self.sprite_types['sirenhead'], True, (13.50, 11.50), 0.5, 0.8)]
+        self.list_of_objects = [SpriteObject(self.sprite_types['sirenhead'], True, (1.50, 17.50), 0.5, 0.8)]
         for i in self.sprite:
             self.list_of_objects.append(SpriteObject(self.sprite_types[i[0]], i[1], i[2], i[3], i[4]))
-        self.list_of_objects.append(SpriteObject(self.sprite_types['sirenhead'], True, (14.50, 10.50), 0.5, 0.8))
+        self.list_of_objects.append(SpriteObject(self.sprite_types['sirenhead'], True, (31.50, 17.50), 0.5, 0.8))
 
 # класс для проверки попадания спрайтов в поле видимости игрока
 class SpriteObject:
@@ -1003,14 +1003,14 @@ def main():
                 if lvl_life == 1:
                     LIFE1 -= 1
                     player.x, player.y = player_pos
-                    sprites.list_of_objects[0].x, sprites.list_of_objects[0].y = 1350, 1150
-                    sprites.list_of_objects[-1].x, sprites.list_of_objects[-1].y = 1450, 1050
+                    sprites.list_of_objects[0].x, sprites.list_of_objects[0].y = 150, 1750
+                    sprites.list_of_objects[-1].x, sprites.list_of_objects[-1].y = 3150, 1750
                     FLAG_4 = True
                 else:
                     LIFE1 -= 1
                     player2.x, player2.y = player_pos
-                    sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y = 1350, 1150
-                    sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y = 1450, 1050
+                    sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y = 150, 1750
+                    sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y = 3150, 1750
                     FLAG_7 = True
             else:
                 FLAG_13 = True
