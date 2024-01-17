@@ -39,7 +39,7 @@ PROJ_COEFF = 3 * DIST * TILE
 SCALE = WIDTH // NUM_RAYS
 
 # игрок
-player_pos = (1350, 1450)
+player_pos = (1351, 1451)
 player_angle = 300
 
 # спрайты
