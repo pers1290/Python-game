@@ -970,6 +970,16 @@ def main():
                     FLAG_7 = True
             else:
                 FLAG_13 = True
+                sprites = Sprites(list_of_objects)
+                sprites2 = Sprites(list_of_objects)
+                interaction = Interaction(player, sprites, drawing, walls1, sprites.list_of_objects[0], text_map)
+                interaction2 = Interaction(player, sprites, drawing, walls1, sprites.list_of_objects[-1], text_map)
+                interaction_2 = Interaction(player2, sprites2, drawing, walls2, sprites2.list_of_objects[0], text_map2)
+                interaction2_2 = Interaction(player2, sprites2, drawing, walls2, sprites2.list_of_objects[-1],
+                                             text_map2)
+                MOMEY_MINI = [(1, 1), (6, 2), (3, 15), (5, 13), (11, 16), (13, 1), (20, 17), (20, 11), (23, 3),
+                              (29, 15), (30, 6)]
+
             player.x, player.y = player_pos
             sprites.list_of_objects[0].x, sprites.list_of_objects[0].y = 150, 1750
             sprites.list_of_objects[-1].x, sprites.list_of_objects[-1].y = 3150, 1750
@@ -979,6 +989,7 @@ def main():
             video = moviepy.editor.VideoFileClip("data/vidos.mp4")
             video.preview()
             pygame.mixer.Channel(0).play(pygame.mixer.Sound("data/music2.mp3"), -1)
+
         if FLAG_13:
             sc.fill((0, 0, 0))
             for event in pygame.event.get():
