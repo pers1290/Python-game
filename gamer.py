@@ -1230,7 +1230,7 @@ def main():
                     cur.execute(f'''UPDATE game_db
                     SET lvl2 = {timelvl2}
                     WHERE name = "{user_text}"''')
-            elif int(result[0][0]) > timelvl2:
+            elif int(result[0][0]) > int(timelvl2):
                 with con:
                     cur.execute(f'''UPDATE game_db
                     SET lvl2 = {timelvl2}
