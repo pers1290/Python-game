@@ -55,7 +55,6 @@ g = 0
 clic = 0
 CL = 0
 
-
 # скорость игрока
 def player_speed():
     global clic
@@ -64,7 +63,6 @@ def player_speed():
         return 10 + (clic * 1.15)
     else:
         return 5 + (clic * 1.15)
-
 
 # карта № 1
 _ = False
@@ -578,6 +576,7 @@ def main():
             df = round(sum(fg) / len(fg))
         else:
             df = 0
+
     FLAG_1 = True
     FLAG_2 = False
     FLAG_3 = False
@@ -592,6 +591,7 @@ def main():
     FLAG_12 = False
     FLAG_13 = False
     FLAG_22 = False
+
     lvl_life = 1
     dop_life = 0
     lvl1 = True
@@ -608,7 +608,6 @@ def main():
     global clic
     global LIFE1
     global CL
-    k = 1
     x, y = 0, 0
     bestminut = 0
     # основной цикл
@@ -649,6 +648,7 @@ def main():
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
             pygame.display.flip()
+
         # меню
         if FLAG_10:
             sc.blit(fom, (0, 0))
@@ -732,6 +732,7 @@ def main():
             interaction2_2 = Interaction(player2, sprites2, drawing, walls2, sprites2.list_of_objects[-1], text_map2)
             pygame.display.flip()
         # заставка первого уровня
+
         if FLAG_11:
             sc.fill((0, 0, 0))
             for event in pygame.event.get():
@@ -762,6 +763,7 @@ def main():
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
             pygame.display.flip()
+
         # правила игры
         if FLAG_2:
             sc.blit(fom2, (0, 0))
@@ -799,6 +801,7 @@ def main():
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
             pygame.display.flip()
+
         # вход в аккаунт
         if FLAG_3:
             sc.blit(fom3, (0, 0))
@@ -861,6 +864,7 @@ def main():
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
             pygame.display.flip()
+
         # первый уровень
         if FLAG_4:
             lvl_life = 1
@@ -883,26 +887,26 @@ def main():
                     next_pos2 = interaction2.npc_move()
             if (sprites.list_of_objects[0].x, sprites.list_of_objects[0].y) != next_pos:
                 if next_pos[0] > sprites.list_of_objects[0].x:
-                    sprites.list_of_objects[0].x += 5
+                    sprites.list_of_objects[0].x += 4
                 elif next_pos[0] < sprites.list_of_objects[0].x:
-                    sprites.list_of_objects[0].x -= 5
+                    sprites.list_of_objects[0].x -= 4
                 else:
                     pass
                 if next_pos[1] > sprites.list_of_objects[0].y:
-                    sprites.list_of_objects[0].y += 5
+                    sprites.list_of_objects[0].y += 4
                 elif next_pos[1] < sprites.list_of_objects[0].y:
-                    sprites.list_of_objects[0].y -= 5
+                    sprites.list_of_objects[0].y -= 4
             if (sprites.list_of_objects[-1].x, sprites.list_of_objects[-1].y) != next_pos2:
                 if next_pos2[0] > sprites.list_of_objects[-1].x:
-                    sprites.list_of_objects[-1].x += 5
+                    sprites.list_of_objects[-1].x += 4
                 elif next_pos2[0] < sprites.list_of_objects[-1].x:
-                    sprites.list_of_objects[-1].x -= 5
+                    sprites.list_of_objects[-1].x -= 4
                 else:
                     pass
                 if next_pos2[1] > sprites.list_of_objects[-1].y:
-                    sprites.list_of_objects[-1].y += 5
+                    sprites.list_of_objects[-1].y += 4
                 elif next_pos2[1] < sprites.list_of_objects[-1].y:
-                    sprites.list_of_objects[-1].y -= 5
+                    sprites.list_of_objects[-1].y -= 4
             player.movement()
             sc.fill((0, 0, 0))
             x_new = int(player.x / TILE)
@@ -953,6 +957,7 @@ def main():
                     sprites.list_of_objects[-1].y - player.y) <= 70:
                 FLAG_12 = True
                 FLAG_4 = False
+
         if FLAG_12:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -981,9 +986,11 @@ def main():
                               (29, 15), (30, 6)]
 
             player.x, player.y = player_pos
+            player.angle = player_angle
             sprites.list_of_objects[0].x, sprites.list_of_objects[0].y = 150, 1750
             sprites.list_of_objects[-1].x, sprites.list_of_objects[-1].y = 3150, 1750
             player2.x, player2.y = player_pos
+            player2.angle = player_angle
             sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y = 150, 1750
             sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y = 3150, 1750
             video = moviepy.editor.VideoFileClip("data/vidos.mp4")
@@ -1023,6 +1030,7 @@ def main():
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
             pygame.display.flip()
+
         # результат прохождения первого уровня
         if FLAG_5:
             sc.fill((0, 0, 0))
@@ -1095,6 +1103,7 @@ def main():
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
             pygame.display.flip()
+
         # заставка второго уровня
         if FLAG_6:
             sc.fill((0, 0, 0))
@@ -1126,6 +1135,7 @@ def main():
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
             pygame.display.flip()
+
         # второй уровень
         if FLAG_7:
             lvl_life = 2
@@ -1217,6 +1227,7 @@ def main():
                     sprites2.list_of_objects[-1].y - player2.y) <= 100:
                 FLAG_7 = False
                 FLAG_12 = True
+
         # результат прохождения второго уровня
         if FLAG_8:
             sc.fill((0, 0, 0))
@@ -1285,6 +1296,7 @@ def main():
             if x != 0 and y != 0:
                 sc.blit(image, (x, y))
             pygame.display.flip()
+
         # конечное окно
         if FLAG_9:
             sc.fill((0, 0, 0))
@@ -1402,6 +1414,7 @@ def main():
             for o in fh[:df]:
                 sc.blit(star_03, o)
             pygame.display.flip()
+
         # магазин
         if FLAG_22:
             sc.fill((0, 0, 0))
