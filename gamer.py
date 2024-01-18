@@ -600,6 +600,7 @@ def main():
     t1 = False
     t2 = False
     min_flag = False
+    k = 1
     global player_angle
     global A
     global LVL
