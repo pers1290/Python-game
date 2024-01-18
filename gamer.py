@@ -1,12 +1,10 @@
 import pygame
 import math
-import moviepy.editor
+from moviepy.video.VideoClip import VideoClip
+from moviepy.video.fx.resize import resize
+VideoClip.resize = resize
+from moviepy.editor import VideoFileClip
 import sqlite3
-import sys
-
-output = open("output.txt", "wt")
-sys.stdout = output
-sys.stderr = output
 # игровые настройки
 WIDTH = 1200
 HEIGHT = 800
@@ -238,7 +236,7 @@ class Player:
         cos_a = math.cos(self.angle)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_ESCAPE]:
-            exit()
+            pygame.quit()
         if keys[pygame.K_w]:
             dx = player_speed() * cos_a
             dy = player_speed() * sin_a
@@ -623,14 +621,14 @@ def main():
             sc.blit(fom, (0, 0))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
                     vol = 1.0
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        exit()
+                        pygame.quit()
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
@@ -660,14 +658,14 @@ def main():
             sc.blit(fom, (0, 0))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
                     vol = 1.0
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        exit()
+                        pygame.quit()
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
@@ -743,14 +741,14 @@ def main():
             sc.fill((0, 0, 0))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
                     vol = 1.0
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        exit()
+                        pygame.quit()
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
@@ -775,14 +773,14 @@ def main():
             sc.blit(fom2, (0, 0))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
                     vol = 1.0
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        exit()
+                        pygame.quit()
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
@@ -813,14 +811,14 @@ def main():
             sc.blit(fom3, (0, 0))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
                     vol = 1.0
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        exit()
+                        pygame.quit()
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
@@ -876,7 +874,7 @@ def main():
             lvl_life = 1
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
@@ -967,7 +965,7 @@ def main():
         if FLAG_12:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
             timelvl1 = int((pygame.time.get_ticks() // 1000)) - int(starttime)
             minut = 0
             LVL = 2
@@ -999,7 +997,7 @@ def main():
             player2.angle = player_angle
             sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y = 150, 1750
             sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y = 3150, 1750
-            video = moviepy.editor.VideoFileClip("data/vidos.mp4")
+            video = VideoFileClip("data/vidos.mp4")
             video.preview()
             pygame.mixer.Channel(0).play(pygame.mixer.Sound("data/music2.mp3"), -1)
 
@@ -1007,14 +1005,14 @@ def main():
             sc.fill((0, 0, 0))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
                     vol = 1.0
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        exit()
+                        pygame.quit()
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
@@ -1065,14 +1063,14 @@ def main():
             con.close()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
                     vol = 1.0
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        exit()
+                        pygame.quit()
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
@@ -1115,14 +1113,14 @@ def main():
             sc.fill((0, 0, 0))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
                     vol = 1.0
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        exit()
+                        pygame.quit()
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
@@ -1147,7 +1145,7 @@ def main():
             lvl_life = 2
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
@@ -1262,14 +1260,14 @@ def main():
             con.close()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
                     vol = 1.0
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        exit()
+                        pygame.quit()
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
@@ -1313,7 +1311,7 @@ def main():
                     with open('star.txt', 'a', encoding="utf-8") as jh:
                         if g > 0:
                             jh.write(f'{str(g)}')
-                    exit()
+                    pygame.quit()
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
@@ -1323,7 +1321,7 @@ def main():
                         with open('star.txt', 'a', encoding="utf-8") as jh:
                             if g > 0:
                                 jh.write(f'{str(g)}')
-                        exit()
+                        pygame.quit()
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
@@ -1426,14 +1424,14 @@ def main():
             sc.fill((0, 0, 0))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit()
+                    pygame.quit()
                 if vol < 0:
                     vol = 0.0
                 if vol > 1:
                     vol = 1.0
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        exit()
+                        pygame.quit()
                     if event.key == pygame.K_DOWN:
                         vol -= 0.1
                         pygame.mixer.Channel(0).set_volume(vol)
