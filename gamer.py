@@ -2,7 +2,11 @@ import pygame
 import math
 import moviepy.editor
 import sqlite3
+import sys
 
+output = open("output.txt", "wt")
+sys.stdout = output
+sys.stderr = output
 # игровые настройки
 WIDTH = 1200
 HEIGHT = 800
