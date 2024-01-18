@@ -1384,7 +1384,7 @@ def main():
                     sc.blit(star_01, j)
             st_text = f.render('КОНЕЦ', 0, (255, 0, 0))
             sc.blit(st_text, (390, 300))
-            d_time = f'поддержка автора: 89645211748(тинькофф)'
+            # d_time = f'поддержка автора: 89645211748(тинькофф)'
             d_back = f'Выйти в меню'
             myfont = pygame.font.Font("data/shrift.ttf", 24)
             stars = pygame.font.Font("data/shrift.ttf", 24)
