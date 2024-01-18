@@ -1391,10 +1391,10 @@ def main():
             ret = pygame.font.Font("data/shrift.ttf", 24)
             r = ret.render(f'рейтинг', 0, (0, 150, 0))
             st = stars.render('как вам игра?', 0, (0, 150, 0))
-            rend = myfont.render(d_time, 0, (0, 150, 0))
+            # rend = myfont.render(d_time, 0, (0, 150, 0))
             rend1 = myfont.render(d_back, 0, (0, 150, 0))
             sc.blit(rend1, (950, 700))
-            sc.blit(rend, (350, 440))
+            # sc.blit(rend, (350, 440))
             sc.blit(st, (500, 490))
             sc.blit(r, (10, 10))
             if x != 0 and y != 0:
