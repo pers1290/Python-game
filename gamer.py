@@ -60,7 +60,7 @@ def player_speed():
     global clic
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LSHIFT]:
-        return 10 + (clic * 1.15)
+        return 7.5 + (clic * 1.15)
     else:
         return 5 + (clic * 1.15)
 
@@ -189,6 +189,7 @@ class Player:
     def pos(self):
         return self.x, self.y
 
+    #проверка столкновения игрока со стенами
     def st(self, dx, dy):
         next_r = self.rect1.copy()
         next_r.move_ip(dx, dy)
@@ -1158,26 +1159,26 @@ def main():
                     next_pos2_2 = interaction2_2.npc_move()
             if (sprites2.list_of_objects[0].x, sprites2.list_of_objects[0].y) != next_pos_2:
                 if next_pos_2[0] > sprites2.list_of_objects[0].x:
-                    sprites2.list_of_objects[0].x += 5
+                    sprites2.list_of_objects[0].x += 4
                 elif next_pos_2[0] < sprites2.list_of_objects[0].x:
-                    sprites2.list_of_objects[0].x -= 5
+                    sprites2.list_of_objects[0].x -= 4
                 else:
                     pass
                 if next_pos_2[1] > sprites2.list_of_objects[0].y:
-                    sprites2.list_of_objects[0].y += 5
+                    sprites2.list_of_objects[0].y += 4
                 elif next_pos_2[1] < sprites2.list_of_objects[0].y:
-                    sprites2.list_of_objects[0].y -= 5
+                    sprites2.list_of_objects[0].y -= 4
             if (sprites2.list_of_objects[-1].x, sprites2.list_of_objects[-1].y) != next_pos2_2:
                 if next_pos2_2[0] > sprites2.list_of_objects[-1].x:
-                    sprites2.list_of_objects[-1].x += 5
+                    sprites2.list_of_objects[-1].x += 4
                 elif next_pos2_2[0] < sprites2.list_of_objects[-1].x:
-                    sprites2.list_of_objects[-1].x -= 5
+                    sprites2.list_of_objects[-1].x -= 4
                 else:
                     pass
                 if next_pos2_2[1] > sprites2.list_of_objects[-1].y:
-                    sprites2.list_of_objects[-1].y += 5
+                    sprites2.list_of_objects[-1].y += 4
                 elif next_pos2_2[1] < sprites2.list_of_objects[-1].y:
-                    sprites2.list_of_objects[-1].y -= 5
+                    sprites2.list_of_objects[-1].y -= 4
 
             if CL == 2:
                 LIFE1 = 1
